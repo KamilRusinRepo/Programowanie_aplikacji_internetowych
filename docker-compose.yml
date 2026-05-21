@@ -9,6 +9,7 @@ services:
       - .env
     volumes:
       - ./public:/var/www/html/public
+      - ./templates:/var/www/html/templates
       - ./src:/var/www/html/src
     depends_on:
       - db
