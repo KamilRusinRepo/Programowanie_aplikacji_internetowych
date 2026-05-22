@@ -1,0 +1,52 @@
+/* Branding overrides: Inter font and icon sizing */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+
+body {
+    font-family: 'Inter', Inter, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.brand-logo {
+    width: 28px;
+    height: 28px;
+    display: block;
+}
+
+.password-toggle {
+    padding: 6px 8px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+.password-toggle:hover {
+    background: rgba(46, 204, 112, 0.04);
+}
+
+.password-toggle:focus {
+    outline: none;
+}
+
+.password-toggle .password-icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
+/* Ensure inline images don't add extra descenders */
+img.password-icon {
+    vertical-align: middle;
+}
+
+.continue-guest .btn-ghost {
+    color: #475569;
+}
+
+.continue-guest .btn-ghost .guest-icon {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.continue-guest .btn-ghost {
+    gap: 8px;
+}
