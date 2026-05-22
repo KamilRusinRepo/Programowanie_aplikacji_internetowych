@@ -1,0 +1,30 @@
+<main class="dashboard-page">
+    <header class="dashboard-header">
+        <div>
+            <p class="eyebrow">FlashMind</p>
+            <h1>Dashboard</h1>
+        </div>
+
+        <form method="post" action="/logout">
+            <button type="submit" class="btn btn-ghost">Logout</button>
+        </form>
+    </header>
+
+    <section class="dashboard-grid">
+        <article class="dashboard-card">
+            <h2>Profile</h2>
+            <p><strong>User:</strong> {{user.username}}</p>
+            <p><strong>Email:</strong> {{user.email}}</p>
+            <p><strong>Role:</strong> {{user.roleName}}</p>
+        </article>
+
+        <article class="dashboard-card">
+            <h2>Next steps</h2>
+            <ul>
+                <li>Create deck screens</li>
+                <li>Add flashcards CRUD</li>
+                <li>Prepare learning flow</li>
+            </ul>
+        </article>
+    </section>
+</main>
