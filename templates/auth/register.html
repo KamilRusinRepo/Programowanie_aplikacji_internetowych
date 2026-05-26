@@ -1,0 +1,54 @@
+<main class="auth-page">
+    <div class="auth-wrapper">
+        <section class="auth-card compact">
+            <div class="auth-form-panel">
+                <h2>Create account</h2>
+                <p class="helper-text">Sign up and start creating flashcards.</p>
+
+                <div class="form-error-box" data-form-error></div>
+
+                <form method="post" action="/register" class="auth-form" data-auth-form>
+                    <label>
+                        <span class="label-small">Username</span>
+                        <input type="text" name="username" placeholder="Your username" value="{{old.username}}" autocomplete="username">
+                        <small data-field-error="username">{{errors.username}}</small>
+                    </label>
+
+                    <label>
+                        <span class="label-small">Email</span>
+                        <input type="email" name="email" placeholder="name@company.com" value="{{old.email}}" autocomplete="email">
+                        <small data-field-error="email">{{errors.email}}</small>
+                    </label>
+
+                    <label>
+                        <div class="label-row"><span class="label-small">Password</span></div>
+                        <div class="password-field">
+                            <input type="password" name="password" data-password-field placeholder="Minimum 8 characters" autocomplete="new-password">
+                            <button type="button" class="password-toggle" data-password-toggle>
+                                <img src="/icons/eye.svg" alt="Show password" class="password-icon">
+                            </button>
+                        </div>
+                        <small data-field-error="password">{{errors.password}}</small>
+                    </label>
+
+                    <label>
+                        <span class="label-small">Confirm password</span>
+                        <div class="password-field">
+                            <input type="password" name="password_confirmation" data-password-field placeholder="Repeat password" autocomplete="new-password">
+                            <button type="button" class="password-toggle" data-password-toggle>
+                                <img src="/icons/eye.svg" alt="Show password" class="password-icon">
+                            </button>
+                        </div>
+                        <small data-field-error="password_confirmation">{{errors.password_confirmation}}</small>
+                    </label>
+
+                    <button type="submit" class="btn btn-primary btn-large">Create account</button>
+                </form>
+            </div>
+        </section>
+
+        <div class="auth-footer">
+                    <p>Already have an account? <a href="/login">Sign in</a></p>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,49 @@
+<main class="auth-page">
+    <div class="auth-wrapper">
+        <section class="auth-card compact">
+            <div class="auth-form-panel">
+                <h2>Sign In</h2>
+                <p class="helper-text">Enter your email or username and password.</p>
+
+                <div class="form-error-box" data-form-error></div>
+
+                <form method="post" action="/login" class="auth-form" data-auth-form>
+                    <label>
+                        <span class="label-small">Email</span>
+                        <input type="text" name="login" placeholder="name@company.com" value="{{old.login}}" autocomplete="username">
+                        <small data-field-error="login">{{errors.login}}</small>
+                    </label>
+
+                    <label>
+                        <div class="label-row">
+                            <span class="label-small">Password</span>
+                            <a class="muted-link" href="#">Forgot?</a>
+                        </div>
+                        <div class="password-field">
+                            <input type="password" name="password" data-password-field placeholder="●●●●●●●●" autocomplete="current-password">
+                            <button type="button" class="password-toggle" data-password-toggle>
+                                <img src="/icons/eye.svg" alt="Show password" class="password-icon">
+                            </button>
+                        </div>
+                        <small data-field-error="password">{{errors.password}}</small>
+                    </label>
+
+                    <button type="submit" class="btn btn-primary btn-large">Sign In</button>
+                </form>
+
+                <div class="or-sep"><span>OR CONTINUE WITH</span></div>
+
+                <div class="continue-guest">
+                    <a class="btn btn-ghost btn-full" href="#">
+                        <img src="/icons/guest.svg" alt="Guest" class="guest-icon">
+                        <span>Continue as Guest</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <div class="auth-footer auth-footer-below">
+            <p>Don't have an account? <a href="/register">Sign up for free</a></p>
+        </div>
+    </div>
+</main>
