@@ -29,6 +29,13 @@ final class DashboardController extends BaseController
             'title' => 'Dashboard',
             'displayName' => $displayName,
             'userInitials' => $initials,
+            'nav' => [
+                'dashboard' => 'is-active',
+                'decks' => '',
+                'explore' => '',
+                'stats' => '',
+                'settings' => '',
+            ],
             'user' => $userModel === null ? [] : [
                 'displayName' => $displayName,
                 'username' => $userModel->username,
