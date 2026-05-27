@@ -1,30 +1,132 @@
-<main class="dashboard-page">
-    <header class="dashboard-header">
+<main class="dashboard-main">
+    <section class="dashboard-hero">
         <div>
-            <p class="eyebrow">FlashMind</p>
-            <h1>Dashboard</h1>
+            <p class="dashboard-kicker">Welcome back, {{displayName}}!</p>
+            <h1>You're on a roll today. Keep the momentum going.</h1>
         </div>
 
-        <form method="post" action="/logout">
-            <button type="submit" class="btn btn-ghost">Logout</button>
-        </form>
-    </header>
+        <div class="dashboard-metrics">
+            <div class="metric-pill metric-pill-warm">
+                <span class="metric-icon">🔥</span>
+                <span class="metric-value">{{stats.streak}} days</span>
+            </div>
+            <div class="metric-pill">
+                <span class="metric-icon metric-icon-soft">✓</span>
+                <span class="metric-value">{{stats.dueCards}}</span>
+            </div>
+            <div class="metric-pill metric-pill-strong">
+                <div class="metric-progress-text">
+                    <span class="metric-label">LEVEL {{stats.level}}</span>
+                    <span class="metric-value">{{stats.xp}}</span>
+                </div>
+                <div class="metric-progress-track"><span style="width: {{stats.progress}}%"></span></div>
+            </div>
+        </div>
+    </section>
 
-    <section class="dashboard-grid">
-        <article class="dashboard-card">
-            <h2>Profile</h2>
-            <p><strong>User:</strong> {{user.username}}</p>
-            <p><strong>Email:</strong> {{user.email}}</p>
-            <p><strong>Role:</strong> {{user.roleName}}</p>
-        </article>
+    <section class="dashboard-section">
+        <div class="section-heading-row">
+            <h2>Continue Learning</h2>
+            <a href="#" class="section-link">View All Reviews</a>
+        </div>
 
-        <article class="dashboard-card">
-            <h2>Next steps</h2>
-            <ul>
-                <li>Create deck screens</li>
-                <li>Add flashcards CRUD</li>
-                <li>Prepare learning flow</li>
-            </ul>
-        </article>
+        <div class="learning-grid">
+            <article class="learning-card">
+                <div class="learning-card-icon is-mint">🌐</div>
+                <div class="learning-card-content">
+                    <h3>Spanish Vocabulary</h3>
+                    <p>45 cards due for review</p>
+                    <div class="card-progress-row"><span>Mastery</span><span>72%</span></div>
+                    <div class="card-progress"><span style="width: 72%"></span></div>
+                </div>
+                <a href="#" class="session-btn">Start Session</a>
+            </article>
+
+            <article class="learning-card">
+                <div class="learning-card-icon is-sand">🎨</div>
+                <div class="learning-card-content">
+                    <h3>Modern Art History</h3>
+                    <p>12 cards due for review</p>
+                    <div class="card-progress-row"><span>Mastery</span><span>48%</span></div>
+                    <div class="card-progress"><span style="width: 48%"></span></div>
+                </div>
+                <a href="#" class="session-btn">Start Session</a>
+            </article>
+        </div>
+    </section>
+
+    <section class="dashboard-section">
+        <div class="section-heading-row">
+            <h2>My Decks</h2>
+            <a href="#" class="create-deck-btn">+ Create Deck</a>
+        </div>
+
+        <div class="deck-grid">
+            <article class="deck-card deck-card-mint">
+                <div class="deck-card-icon">Σ</div>
+                <div class="deck-card-body">
+                    <h3>Mathematics 101</h3>
+                    <p>156 Cards • Last studied 2d ago</p>
+                    <div class="card-progress"><span style="width: 85%"></span></div>
+                    <div class="deck-card-footer"><span></span><strong>85%</strong></div>
+                </div>
+            </article>
+
+            <article class="deck-card deck-card-blue">
+                <div class="deck-card-icon">⚗</div>
+                <div class="deck-card-body">
+                    <h3>Advanced Biology</h3>
+                    <p>240 Cards • Last studied 1h ago</p>
+                    <div class="card-progress"><span style="width: 22%"></span></div>
+                    <div class="deck-card-footer"><span></span><strong>22%</strong></div>
+                </div>
+            </article>
+
+            <article class="deck-card deck-card-lilac">
+                <div class="deck-card-icon">文A</div>
+                <div class="deck-card-body">
+                    <h3>French Phrases</h3>
+                    <p>88 Cards • Last studied 1w ago</p>
+                    <div class="card-progress"><span style="width: 64%"></span></div>
+                    <div class="deck-card-footer"><span></span><strong>64%</strong></div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="dashboard-section dashboard-section-bottom">
+        <div class="section-heading-row">
+            <h2>Explore More</h2>
+            <a href="#" class="section-link">Explore Marketplace</a>
+        </div>
+
+        <div class="explore-grid">
+            <article class="explore-card explore-card-science">
+                <div class="explore-art explore-art-science"></div>
+                <div class="explore-card-body">
+                    <span class="tag tag-science">SCIENCE</span>
+                    <h3>Quantum Physics Basics</h3>
+                    <p>12.4k learners • ★ 4.9</p>
+                </div>
+            </article>
+
+            <article class="explore-card explore-card-language">
+                <div class="explore-art explore-art-language"></div>
+                <div class="explore-card-body">
+                    <span class="tag tag-language">LANGUAGE</span>
+                    <h3>Italian for Travelers</h3>
+                    <p>8.1k learners • ★ 4.7</p>
+                </div>
+            </article>
+
+            <article class="explore-card explore-card-philosophy">
+                <div class="explore-art explore-art-philosophy"></div>
+                <div class="explore-card-body">
+                    <span class="tag tag-philosophy">PHILOSOPHY</span>
+                    <h3>Stoicism Daily</h3>
+                    <p>5.2k learners • ★ 5.0</p>
+                </div>
+            </article>
+        </div>
     </section>
 </main>

@@ -91,3 +91,43 @@ const handleAuthSubmit = async (event) => {
 
 document.addEventListener('click', togglePasswordVisibility);
 document.addEventListener('submit', handleAuthSubmit);
+
+// Dashboard user popover: toggle logout button and close on outside click or Escape
+document.addEventListener('click', (e) => {
+    const toggle = e.target.closest('[data-user-toggle]');
+
+    if (toggle) {
+        const wrap = toggle.closest('.dashboard-sidebar-user-wrap');
+        if (!wrap) return;
+        wrap.classList.toggle('popover-open');
+        return;
+    }
+
+    // If clicked inside the popover, do nothing (allow button clicks)
+    if (e.target.closest('.dashboard-sidebar-user-wrap')) {
+        return;
+    }
+
+    // Clicked outside -> close any open popovers
+    document.querySelectorAll('.dashboard-sidebar-user-wrap.popover-open').forEach((w) => {
+        w.classList.remove('popover-open');
+    });
+});
+
+// Logout button navigation
+document.addEventListener('click', (e) => {
+    if (e.target.matches('.user-logout-btn')) {
+        e.preventDefault();
+        // Navigate to logout endpoint (server will redirect)
+        window.location.assign('/logout');
+    }
+});
+
+// Close popover on Escape
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+        document.querySelectorAll('.dashboard-sidebar-user-wrap.popover-open').forEach((w) => {
+            w.classList.remove('popover-open');
+        });
+    }
+});

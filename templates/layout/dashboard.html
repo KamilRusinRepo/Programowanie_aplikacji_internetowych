@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/app.css">
+    <link rel="stylesheet" href="/styles/branding.css">
+    <link rel="stylesheet" href="/styles/dashboard.css">
+    <meta name="robots" content="noindex,nofollow">
+</head>
+<body class="dashboard-body">
+    <div class="dashboard-shell">
+        <aside class="dashboard-sidebar">
+            <div class="dashboard-sidebar-brand">
+                <div class="dashboard-sidebar-logo">
+                    <img src="/icons/logo.svg" alt="FlashMind">
+                </div>
+                <div>
+                    <div class="dashboard-sidebar-title">FlashMind</div>
+                    <div class="dashboard-sidebar-subtitle">Master your learning</div>
+                </div>
+            </div>
+
+            <nav class="dashboard-nav" aria-label="Primary">
+                <a href="/dashboard" class="dashboard-nav-item is-active">
+                    <img src="/icons/home.svg" alt="Home" class="dashboard-nav-icon-img">
+                    <span>Home</span>
+                </a>
+                <a href="#" class="dashboard-nav-item">
+                    <img src="/icons/create_deck.svg" alt="My Decks" class="dashboard-nav-icon-img">
+                    <span>My Decks</span>
+                </a>
+                <a href="#" class="dashboard-nav-item">
+                    <img src="/icons/explore.svg" alt="Explore Decks" class="dashboard-nav-icon-img">
+                    <span>Explore Decks</span>
+                </a>
+                <a href="#" class="dashboard-nav-item">
+                    <img src="/icons/statistics.svg" alt="Statistics" class="dashboard-nav-icon-img">
+                    <span>Statistics</span>
+                </a>
+                <a href="#" class="dashboard-nav-item">
+                    <img src="/icons/settings.svg" alt="Settings" class="dashboard-nav-icon-img">
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="dashboard-sidebar-user-wrap">
+                <div class="user-logout-popover" aria-hidden="true">
+                    <button type="button" class="user-logout-btn">Logout</button>
+                </div>
+
+                <div class="dashboard-sidebar-user" data-user-toggle>
+                    <div class="dashboard-user-avatar">{{userInitials}}</div>
+                    <div>
+                        <div class="dashboard-user-name">{{displayName}}</div>
+                        <div class="dashboard-user-role">Pro Learner</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="dashboard-content-shell">
+            {{content}}
+        </div>
+    </div>
+    <script>
+        document.addEventListener('click', (e) => {
+            const toggle = e.target.closest('[data-user-toggle]');
+
+            if (toggle) {
+                const wrap = toggle.closest('.dashboard-sidebar-user-wrap');
+                if (!wrap) return;
+                wrap.classList.toggle('popover-open');
+                return;
+            }
+
+            if (e.target.closest('.dashboard-sidebar-user-wrap')) {
+                return;
+            }
+
+            document.querySelectorAll('.dashboard-sidebar-user-wrap.popover-open').forEach((w) => {
+                w.classList.remove('popover-open');
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('.user-logout-btn')) {
+                e.preventDefault();
+                window.location.assign('/logout');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' || e.key === 'Esc') {
+                document.querySelectorAll('.dashboard-sidebar-user-wrap.popover-open').forEach((w) => {
+                    w.classList.remove('popover-open');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
