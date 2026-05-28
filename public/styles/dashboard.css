@@ -457,6 +457,241 @@ body.dashboard-body {
     transform: translateX(20px);
 }
 
+.deck-create-main {
+    max-width: 900px;
+}
+
+.deck-create-hero h1 {
+    margin: 0 0 6px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.deck-create-hero p {
+    margin: 0 0 18px;
+    color: #64748b;
+    font-size: 0.92rem;
+}
+
+.deck-create-card {
+    background: #ffffff;
+    border: 1px solid #e7edf5;
+    border-radius: 22px;
+    padding: 20px 22px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+
+.deck-create-form {
+    display: grid;
+    gap: 16px;
+}
+
+.deck-create-card .form-field label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #64748b;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.deck-create-card input,
+.deck-create-card textarea,
+.deck-create-card select {
+    width: 100%;
+    border: 1px solid #e7edf5;
+    border-radius: 14px;
+    padding: 10px 14px;
+    font-size: 0.92rem;
+    color: #0f172a;
+    background: #f8fafc;
+}
+
+.deck-create-card textarea {
+    resize: vertical;
+    min-height: 88px;
+}
+
+.deck-create-card .field-error {
+    display: block;
+    margin-top: 6px;
+    color: #ef4444;
+    font-size: 0.78rem;
+}
+
+.deck-type-toggle {
+    display: inline-flex;
+    background: #f1f5f9;
+    border-radius: 999px;
+    padding: 4px;
+    gap: 4px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.deck-type-toggle .toggle-option {
+    display: inline-flex;
+    align-items: center;
+}
+
+.deck-type-toggle input {
+    display: none;
+}
+
+.deck-type-toggle span {
+    padding: 6px 18px;
+    border-radius: 999px;
+    font-weight: 700;
+    color: #64748b;
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+}
+
+.deck-type-toggle input:checked + span {
+    background: #ffffff;
+    color: #16a34a;
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.form-row.is-single {
+    grid-template-columns: 1fr;
+}
+
+.deck-public {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 14px;
+    border: 1px solid #e7edf5;
+    border-radius: 16px;
+    background: #f8fafc;
+}
+
+.deck-public h4 {
+    margin: 0 0 4px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.deck-public p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.deck-create-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: flex-start;
+    margin-top: 4px;
+}
+
+.deck-list-main {
+    max-width: 1120px;
+}
+
+.deck-list-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.deck-list-hero h1 {
+    margin: 0 0 6px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.deck-list-hero p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.92rem;
+}
+
+.deck-empty {
+    grid-column: 1 / -1;
+    background: #ffffff;
+    border: 1px dashed #dbe5f0;
+    border-radius: 18px;
+    padding: 18px;
+    color: #64748b;
+    text-align: center;
+}
+
+.deck-card-icon-academic {
+    background: linear-gradient(180deg, #e8f9ef 0%, #d8f5e5 100%);
+    color: rgba(15, 23, 42, 0.2);
+}
+
+.deck-card-icon-language {
+    background: linear-gradient(180deg, #f2e9ff 0%, #e9dcff 100%);
+    color: rgba(15, 23, 42, 0.2);
+}
+
+.deck-card-icon-science {
+    background: linear-gradient(180deg, #eef4ff 0%, #e2ecff 100%);
+    color: rgba(15, 23, 42, 0.2);
+}
+
+.deck-card-icon-history {
+    background: linear-gradient(180deg, #fff2e0 0%, #ffe7c6 100%);
+    color: rgba(15, 23, 42, 0.2);
+}
+
+.deck-card-icon-personal {
+    background: linear-gradient(180deg, #fce7f3 0%, #f9d8ea 100%);
+    color: rgba(15, 23, 42, 0.2);
+}
+
+.deck-card-icon-general {
+    background: linear-gradient(180deg, #e8f9ef 0%, #d8f5e5 100%);
+    color: rgba(15, 23, 42, 0.2);
+}
+
+.deck-create-btn {
+    background: #22c55e;
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 20px;
+    font-weight: 700;
+    box-shadow: 0 10px 18px rgba(34, 197, 94, 0.22);
+}
+
+.deck-cancel-btn {
+    background: #f1f5f9;
+    color: #475569;
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-weight: 700;
+}
+
+@media (max-width: 640px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .deck-create-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
 .dashboard-hero {
     display: flex;
     align-items: flex-start;
