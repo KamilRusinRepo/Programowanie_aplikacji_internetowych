@@ -7,7 +7,7 @@ namespace FlashMind\Controller;
 use FlashMind\Repository\UserRepository;
 use FlashMind\Http\Request;
 
-final class DashboardController extends BaseController
+final class SettingsController extends BaseController
 {
     public function __construct(
         private readonly UserRepository $users,
@@ -22,32 +22,25 @@ final class DashboardController extends BaseController
         $userModel = $user !== null ? $this->users->findById((int) $user['id']) : null;
         $username = $userModel?->username ?? ($user['username'] ?? 'Alex');
         $displayName = trim((string) preg_replace('/\s+/', ' ', $username));
-        $displayName = $displayName === '' ? 'Alex' : explode(' ', $displayName)[0];
+        $displayName = $displayName === '' ? 'Alex' : $displayName;
         $initials = strtoupper(substr($displayName, 0, 1));
 
-        $this->render('dashboard/index', [
-            'title' => 'Dashboard',
+        $this->render('settings/index', [
+            'title' => 'Settings',
             'displayName' => $displayName,
             'userInitials' => $initials,
             'nav' => [
-                'dashboard' => 'is-active',
+                'dashboard' => '',
                 'decks' => '',
                 'explore' => '',
                 'stats' => '',
-                'settings' => '',
+                'settings' => 'is-active',
             ],
             'user' => $userModel === null ? [] : [
                 'displayName' => $displayName,
                 'username' => $userModel->username,
                 'email' => $userModel->email,
                 'roleName' => $userModel->roleName ?? 'USER',
-            ],
-            'stats' => [
-                'streak' => 5,
-                'dueCards' => '12/20 cards',
-                'level' => 4,
-                'xp' => '850/1000 XP',
-                'progress' => 85,
             ],
         ], 'layout/dashboard');
     }

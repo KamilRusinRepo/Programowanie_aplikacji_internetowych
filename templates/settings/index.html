@@ -1,0 +1,81 @@
+<main class="dashboard-main settings-main">
+    <section class="settings-header">
+        <h1>Profile Settings</h1>
+    </section>
+
+    <section class="settings-card">
+        <div class="settings-profile">
+            <div class="settings-avatar">{{userInitials}}</div>
+            <div class="settings-profile-info">
+                <h2>{{displayName}}</h2>
+                <p>FlashMind Pro Member</p>
+            </div>
+        </div>
+
+        <div class="settings-form">
+            <label class="settings-field">
+                <span>Full Name</span>
+                <input type="text" value="{{displayName}}" placeholder="Full Name">
+            </label>
+
+            <label class="settings-field">
+                <span>Email Address</span>
+                <input type="email" value="{{user.email}}" placeholder="Email Address" readonly disabled>
+            </label>
+        </div>
+
+        <div class="settings-actions">
+            <button type="button" class="settings-save">Save Changes</button>
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <h2>Security</h2>
+        <div class="settings-card settings-row">
+            <div class="settings-row-icon">🔒</div>
+            <div>
+                <h3>Password</h3>
+                <p>Last changed 3 months ago</p>
+            </div>
+            <button type="button" class="settings-outline">Change Password</button>
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <h2>Preferences</h2>
+        <div class="settings-card settings-list">
+            <div class="settings-list-item">
+                <div class="settings-row-icon">🎨</div>
+                <div class="settings-list-info">
+                    <h3>Appearance</h3>
+                    <p>Choose light or dark theme</p>
+                </div>
+                <div class="settings-segment">
+                    <button type="button" class="is-active">Light</button>
+                    <button type="button">Dark</button>
+                </div>
+            </div>
+
+            <div class="settings-list-item">
+                <div class="settings-row-icon">🌐</div>
+                <div class="settings-list-info">
+                    <h3>Language</h3>
+                    <p>Select your preferred language</p>
+                </div>
+                <button type="button" class="settings-pill">English (US)</button>
+            </div>
+
+            <div class="settings-list-item">
+                <div class="settings-row-icon">🔔</div>
+                <div class="settings-list-info">
+                    <h3>Daily Reminders</h3>
+                    <p>Get notified for daily practice</p>
+                </div>
+                <label class="settings-toggle">
+                    <input type="checkbox" checked>
+                    <span></span>
+                </label>
+            </div>
+        </div>
+    </section>
+</main>

@@ -7,6 +7,7 @@ require dirname(__DIR__) . '/src/bootstrap.php';
 use FlashMind\Controller\AuthController;
 use FlashMind\Controller\DashboardController;
 use FlashMind\Controller\HomeController;
+use FlashMind\Controller\SettingsController;
 use FlashMind\Core\View;
 use FlashMind\Http\Request;
 use FlashMind\Http\Router;
@@ -23,6 +24,7 @@ $authService = new AuthService($userRepository, $roleRepository);
 $homeController = new HomeController();
 $authController = new AuthController($authService);
 $dashboardController = new DashboardController($userRepository);
+$settingsController = new SettingsController($userRepository);
 
 $router = new Router();
 $router->get('/', [$homeController, 'index']);
@@ -33,6 +35,7 @@ $router->post('/register', [$authController, 'register']);
 $router->get('/logout', [$authController, 'logout']);
 $router->post('/logout', [$authController, 'logout']);
 $router->get('/dashboard', [$dashboardController, 'index']);
+$router->get('/settings', [$settingsController, 'index']);
 
 $router->dispatch($request, function () {
     View::render('errors/404', ['title' => 'Page not found'], 'layout/app');
