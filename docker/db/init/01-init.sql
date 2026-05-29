@@ -39,6 +39,17 @@ CREATE TABLE IF NOT EXISTS decks (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS cards (
+    id SERIAL PRIMARY KEY,
+    deck_id INT NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
+    front_question TEXT NOT NULL,
+    example_sentence TEXT,
+    image_url TEXT,
+    answer TEXT NOT NULL,
+    translated_example TEXT,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
 INSERT INTO roles (name) VALUES ('USER') ON CONFLICT (name) DO NOTHING;
 INSERT INTO roles (name) VALUES ('ADMIN') ON CONFLICT (name) DO NOTHING;
 
