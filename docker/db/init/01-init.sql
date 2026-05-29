@@ -26,6 +26,19 @@ CREATE TABLE IF NOT EXISTS user_roles (
     CONSTRAINT user_roles_user_id_role_id_unique UNIQUE (user_id, role_id)
 );
 
+CREATE TABLE IF NOT EXISTS decks (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(120) NOT NULL,
+    description TEXT,
+    deck_type VARCHAR(20) NOT NULL DEFAULT 'general',
+    source_language VARCHAR(60) NOT NULL,
+    target_language VARCHAR(60),
+    category VARCHAR(60),
+    is_public BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
 INSERT INTO roles (name) VALUES ('USER') ON CONFLICT (name) DO NOTHING;
 INSERT INTO roles (name) VALUES ('ADMIN') ON CONFLICT (name) DO NOTHING;
 

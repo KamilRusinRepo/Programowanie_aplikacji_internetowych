@@ -35,7 +35,7 @@ final class View
         $replacements = [];
 
         foreach (self::flatten($data) as $key => $value) {
-            if ($key === 'content') {
+            if ($key === 'content' || str_starts_with($key, 'raw.')) {
                 $replacements['{{' . $key . '}}'] = (string) $value;
                 continue;
             }

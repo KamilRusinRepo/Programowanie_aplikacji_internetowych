@@ -6,18 +6,21 @@ require dirname(__DIR__) . '/src/bootstrap.php';
 
 use FlashMind\Controller\AuthController;
 use FlashMind\Controller\DashboardController;
+use FlashMind\Controller\DeckController;
 use FlashMind\Controller\HomeController;
 use FlashMind\Controller\SettingsController;
 use FlashMind\Core\View;
 use FlashMind\Http\Request;
 use FlashMind\Http\Router;
 use FlashMind\Repository\RoleRepository;
+use FlashMind\Repository\DeckRepository;
 use FlashMind\Repository\UserRepository;
 use FlashMind\Service\AuthService;
 
 $request = Request::fromGlobals();
 
 $userRepository = new UserRepository();
+$deckRepository = new DeckRepository();
 $roleRepository = new RoleRepository();
 $authService = new AuthService($userRepository, $roleRepository);
 
@@ -25,6 +28,7 @@ $homeController = new HomeController();
 $authController = new AuthController($authService);
 $dashboardController = new DashboardController($userRepository);
 $settingsController = new SettingsController($userRepository);
+$deckController = new DeckController($deckRepository, $userRepository);
 
 $router = new Router();
 $router->get('/', [$homeController, 'index']);
@@ -36,6 +40,9 @@ $router->get('/logout', [$authController, 'logout']);
 $router->post('/logout', [$authController, 'logout']);
 $router->get('/dashboard', [$dashboardController, 'index']);
 $router->get('/settings', [$settingsController, 'index']);
+$router->get('/decks', [$deckController, 'index']);
+$router->get('/decks/create', [$deckController, 'create']);
+$router->post('/decks', [$deckController, 'store']);
 
 $router->dispatch($request, function () {
     View::render('errors/404', ['title' => 'Page not found'], 'layout/app');
