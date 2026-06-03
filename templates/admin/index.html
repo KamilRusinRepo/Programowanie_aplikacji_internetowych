@@ -1,0 +1,131 @@
+<main class="dashboard-main admin-main" data-admin-modal-state="{{admin.modalStateJson}}">
+    <section class="deck-list-hero">
+        <div>
+            <h1>Admin Panel</h1>
+            <p>Manage users, roles, account status, and learning activity.</p>
+        </div>
+    </section>
+
+    <section class="admin-toolbar">
+        <div class="admin-error">{{admin.error}}</div>
+        <form method="get" action="/admin" class="admin-search">
+            <input type="search" name="q" value="{{filters.q}}" placeholder="Search users...">
+            <select name="role">
+                <option value="">All roles</option>
+                <option value="USER">USER</option>
+                <option value="ADMIN">ADMIN</option>
+            </select>
+            <select name="status">
+                <option value="">All statuses</option>
+                <option value="enabled">Active</option>
+                <option value="disabled">Disabled</option>
+            </select>
+            <button type="submit" class="admin-filter-btn"><span></span>Filter</button>
+        </form>
+
+        <button type="button" class="admin-add-btn" data-add-user><img src="/icons/admin_panel/add_user.svg" alt="">Add User</button>
+    </section>
+
+    <section class="admin-table-card">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Last Activity</th>
+                    <th>XP</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="admin-empty-row {{admin.emptyRowClass}}">
+                    <td colspan="6" class="admin-empty">{{admin.empty}}</td>
+                </tr>
+                {{#users}}
+                <tr class="{{rowClass}}">
+                    <td>
+                        <div class="admin-user-cell">
+                            <div class="admin-avatar">{{initials}}</div>
+                            <div>
+                                <strong>{{username}}</strong>
+                                <span>{{email}}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="admin-badge">{{role}}</span></td>
+                    <td><span class="admin-status {{statusClass}}">{{statusLabel}}</span></td>
+                    <td>{{lastActivity}}</td>
+                    <td>{{xp}} XP</td>
+                    <td>
+                        <div class="admin-actions">
+                            <button type="button" class="admin-icon-action" title="Edit user" aria-label="Edit user" data-edit-user
+                                data-user-id="{{id}}"
+                                data-user-username="{{username}}"
+                                data-user-email="{{email}}"
+                                data-user-role="{{role}}">
+                                <img src="/icons/admin_panel/edit.svg" alt="">
+                            </button>
+                            <form method="post" action="/admin/users/{{id}}/toggle">
+                                <input type="hidden" name="enabled" value="{{toggleValue}}">
+                                <button type="submit" class="admin-icon-action" title="{{toggleTitle}}" aria-label="{{toggleTitle}}">
+                                    <img src="/icons/admin_panel/{{toggleIcon}}" alt="">
+                                </button>
+                            </form>
+                            <form method="post" action="/admin/users/{{id}}/delete" data-confirm-user-delete>
+                                <button type="submit" class="admin-icon-action" title="Delete user" aria-label="Delete user">
+                                    <img src="/icons/admin_panel/delete.svg" alt="">
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {{/users}}
+            </tbody>
+        </table>
+    </section>
+
+    <div class="admin-modal" data-user-modal hidden>
+        <form method="post" action="/admin/users" class="admin-modal-card" data-user-form>
+            <div class="admin-modal-header">
+                <h2 data-modal-title>Add User</h2>
+                <button type="button" data-close-user-modal aria-label="Close">×</button>
+            </div>
+
+            <div class="admin-modal-body">
+                <label>
+                    <span>USERNAME</span>
+                    <input type="text" name="username" data-modal-username required>
+                    <small class="admin-field-error" data-modal-error="username"></small>
+                </label>
+                <label>
+                    <span>EMAIL</span>
+                    <input type="email" name="email" data-modal-email required>
+                    <small class="admin-field-error" data-modal-error="email"></small>
+                </label>
+                <div class="admin-modal-row">
+                    <label>
+                        <span>PASSWORD</span>
+                        <input type="password" name="password" data-modal-password minlength="8">
+                        <small class="admin-field-error" data-modal-error="password"></small>
+                    </label>
+                    <label>
+                        <span>ROLE</span>
+                        <select name="role" data-modal-role>
+                            <option value="USER">User</option>
+                            <option value="ADMIN">Admin</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="admin-modal-note">
+                    Changing a user's role to Admin will grant them full permissions to manage the database and other users in the panel.
+                </div>
+            </div>
+
+            <div class="admin-modal-footer">
+                <button type="button" class="admin-modal-cancel" data-close-user-modal>Cancel</button>
+                <button type="submit" class="admin-modal-save">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</main>
