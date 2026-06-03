@@ -48,4 +48,31 @@ final class DeckRepository
 
         return $statement->fetchAll();
     }
+
+    public function findByIdForUser(int $deckId, int $userId): ?array
+    {
+        $statement = $this->connection->prepare(
+            'SELECT id, name, description, deck_type, source_language, target_language, category, is_public, created_at
+             FROM decks
+             WHERE id = :deck_id AND user_id = :user_id
+             LIMIT 1'
+        );
+        $statement->execute([
+            'deck_id' => $deckId,
+            'user_id' => $userId,
+        ]);
+
+        $row = $statement->fetch();
+
+        return $row === false ? null : $row;
+    }
+
+    public function deleteForUser(int $deckId, int $userId): void
+    {
+        $statement = $this->connection->prepare('DELETE FROM decks WHERE id = :deck_id AND user_id = :user_id');
+        $statement->execute([
+            'deck_id' => $deckId,
+            'user_id' => $userId,
+        ]);
+    }
 }

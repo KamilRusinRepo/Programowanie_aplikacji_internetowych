@@ -1,0 +1,130 @@
+<main class="dashboard-main deck-detail-main">
+    <section class="deck-detail-hero">
+        <div>
+            <h1>Deck: {{deck.name}}</h1>
+            <p>{{deck.description}}</p>
+        </div>
+        <div class="deck-detail-actions">
+            <button type="button" class="deck-outline-btn">Import</button>
+            <button type="button" class="deck-primary-btn">Start Study</button>
+            <form method="post" action="/decks/{{deck.id}}/delete" class="deck-delete-form" data-confirm-delete>
+                <button type="submit" class="deck-danger-btn">Delete Deck</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="deck-cards">
+        {{raw.cards}}
+
+        <button type="button" class="deck-add-card" data-toggle-add-card>
+            <span class="deck-add-icon">+</span>
+            <span>Add New Card</span>
+        </button>
+    </section>
+
+    <section class="deck-add-card-form" data-add-card-form hidden>
+        <h2 data-card-form-title>Add New Card</h2>
+        <form method="post" action="/decks/{{deck.id}}/cards" class="deck-card-form" data-default-action="/decks/{{deck.id}}/cards">
+            <div class="form-field">
+                <label for="front-question">Front question</label>
+                <input id="front-question" name="front_question" type="text" required>
+            </div>
+            <div class="form-field">
+                <label for="example-sentence">Example sentence (optional)</label>
+                <input id="example-sentence" name="example_sentence" type="text">
+            </div>
+            <div class="form-field">
+                <label for="image-url">Image URL (optional)</label>
+                <input id="image-url" name="image_url" type="text" placeholder="https://">
+            </div>
+            <div class="form-field">
+                <label for="answer">Answer</label>
+                <textarea id="answer" name="answer" rows="3" required></textarea>
+            </div>
+            <div class="form-field">
+                <label for="translated-example">Translated example sentence (optional)</label>
+                <input id="translated-example" name="translated_example" type="text">
+            </div>
+            <div class="deck-card-actions">
+                <button type="submit" class="deck-primary-btn">Save Card</button>
+                <button type="button" class="deck-outline-btn" data-cancel-add>Cancel</button>
+            </div>
+        </form>
+    </section>
+</main>
+
+<script>
+    const toggleAdd = document.querySelector('[data-toggle-add-card]');
+    const addForm = document.querySelector('[data-add-card-form]');
+    const cancelAdd = document.querySelector('[data-cancel-add]');
+    const deleteForm = document.querySelector('[data-confirm-delete]');
+    const cardDeleteForms = document.querySelectorAll('[data-confirm-card-delete]');
+    const editButtons = document.querySelectorAll('.card-icon-btn[title="Edit"]');
+    const cardForm = document.querySelector('.deck-card-form');
+    const cardFormTitle = document.querySelector('[data-card-form-title]');
+    const defaultAction = cardForm ? cardForm.dataset.defaultAction : '';
+
+    if (toggleAdd && addForm) {
+        toggleAdd.addEventListener('click', () => {
+            addForm.hidden = false;
+            addForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (cardForm && defaultAction) {
+                cardForm.action = defaultAction;
+            }
+            if (cardFormTitle) {
+                cardFormTitle.textContent = 'Add New Card';
+            }
+            if (cardForm) {
+                cardForm.reset();
+            }
+        });
+    }
+
+    if (cancelAdd && addForm) {
+        cancelAdd.addEventListener('click', () => {
+            addForm.hidden = true;
+        });
+    }
+
+    editButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            if (!addForm || !cardForm) return;
+
+            const cardId = button.dataset.cardId;
+            if (cardId) {
+                cardForm.action = '/decks/{{deck.id}}/cards/' + cardId;
+            }
+
+            cardForm.querySelector('#front-question').value = button.dataset.cardFront || '';
+            cardForm.querySelector('#example-sentence').value = button.dataset.cardExample || '';
+            cardForm.querySelector('#image-url').value = button.dataset.cardImage || '';
+            cardForm.querySelector('#answer').value = button.dataset.cardAnswer || '';
+            cardForm.querySelector('#translated-example').value = button.dataset.cardTranslated || '';
+
+            if (cardFormTitle) {
+                cardFormTitle.textContent = 'Edit Card';
+            }
+
+            addForm.hidden = false;
+            addForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    if (deleteForm) {
+        deleteForm.addEventListener('submit', (event) => {
+            const ok = window.confirm('Are you sure you want to delete this deck? This cannot be undone.');
+            if (!ok) {
+                event.preventDefault();
+            }
+        });
+    }
+
+    cardDeleteForms.forEach((form) => {
+        form.addEventListener('submit', (event) => {
+            const ok = window.confirm('Delete this card?');
+            if (!ok) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
