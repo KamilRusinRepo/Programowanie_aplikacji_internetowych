@@ -115,4 +115,124 @@ final class UserRepository
 
         return $row === false ? null : User::fromArray($row);
     }
+
+    public function usernameExistsForAnotherUser(string $username, int $excludedUserId = 0): bool
+    {
+        $statement = $this->connection->prepare(
+            'SELECT COUNT(*) FROM users WHERE LOWER(username) = LOWER(:username) AND id <> :excluded_id'
+        );
+        $statement->execute([
+            'username' => $username,
+            'excluded_id' => $excludedUserId,
+        ]);
+
+        return (int) $statement->fetchColumn() > 0;
+    }
+
+    public function emailExistsForAnotherUser(string $email, int $excludedUserId = 0): bool
+    {
+        $statement = $this->connection->prepare(
+            'SELECT COUNT(*) FROM users WHERE LOWER(email) = LOWER(:email) AND id <> :excluded_id'
+        );
+        $statement->execute([
+            'email' => $email,
+            'excluded_id' => $excludedUserId,
+        ]);
+
+        return (int) $statement->fetchColumn() > 0;
+    }
+
+    public function findForAdmin(string $search = '', string $role = '', string $status = ''): array
+    {
+        $where = [];
+        $params = [];
+
+        if ($search !== '') {
+            $where[] = '(LOWER(u.username) LIKE :search OR LOWER(u.email) LIKE :search)';
+            $params['search'] = '%' . strtolower($search) . '%';
+        }
+
+        if ($role !== '') {
+            $where[] = 'r.name = :role';
+            $params['role'] = strtoupper($role);
+        }
+
+        if ($status === 'enabled' || $status === 'disabled') {
+            $where[] = 'u.is_enabled = :enabled';
+            $params['enabled'] = $status === 'enabled' ? 'true' : 'false';
+        }
+
+        $sql = 'SELECT u.id, u.username, u.email, u.is_enabled, u.created_at,
+                       COALESCE(r.name, \'USER\') AS role_name,
+                       (SELECT MAX(created_at) FROM study_sessions WHERE user_id = u.id) AS last_activity,
+                       (SELECT COALESCE(SUM(xp_earned), 0) FROM user_daily_progress WHERE user_id = u.id) AS xp_total
+                FROM users u
+                LEFT JOIN user_roles ur ON ur.user_id = u.id
+                LEFT JOIN roles r ON r.id = ur.role_id';
+
+        if ($where !== []) {
+            $sql .= ' WHERE ' . implode(' AND ', $where);
+        }
+
+        $sql .= ' GROUP BY u.id, r.name ORDER BY u.created_at DESC';
+
+        $statement = $this->connection->prepare($sql);
+        $statement->execute($params);
+
+        return $statement->fetchAll();
+    }
+
+    public function setEnabled(int $userId, bool $enabled): void
+    {
+        $statement = $this->connection->prepare('UPDATE users SET is_enabled = :enabled WHERE id = :id');
+        $statement->execute([
+            'enabled' => $enabled ? 'true' : 'false',
+            'id' => $userId,
+        ]);
+    }
+
+    public function updateAdminUser(int $userId, string $username, string $email, ?string $passwordHash): void
+    {
+        if ($passwordHash === null) {
+            $statement = $this->connection->prepare(
+                'UPDATE users SET username = :username, email = :email WHERE id = :id'
+            );
+            $statement->execute([
+                'username' => $username,
+                'email' => $email,
+                'id' => $userId,
+            ]);
+            return;
+        }
+
+        $statement = $this->connection->prepare(
+            'UPDATE users SET username = :username, email = :email, password_hash = :password_hash WHERE id = :id'
+        );
+        $statement->execute([
+            'username' => $username,
+            'email' => $email,
+            'password_hash' => $passwordHash,
+            'id' => $userId,
+        ]);
+    }
+
+    public function deleteById(int $userId): void
+    {
+        $statement = $this->connection->prepare('DELETE FROM users WHERE id = :id');
+        $statement->execute(['id' => $userId]);
+    }
+
+    public function setRole(int $userId, string $roleName): void
+    {
+        $role = $this->connection->prepare('SELECT id FROM roles WHERE name = :name LIMIT 1');
+        $role->execute(['name' => strtoupper($roleName)]);
+        $roleId = (int) $role->fetchColumn();
+
+        if ($roleId <= 0) {
+            return;
+        }
+
+        $this->connection->prepare('DELETE FROM user_roles WHERE user_id = :user_id')->execute(['user_id' => $userId]);
+        $this->assignRole($userId, $roleId);
+    }
 }

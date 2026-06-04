@@ -11,6 +11,8 @@ abstract class BaseController
 {
     protected function render(string $template, array $data = [], string $layout = 'layout/app'): void
     {
+        $data['adminNav'] = $this->adminNavData();
+
         View::render($template, $data, $layout);
     }
 
@@ -45,5 +47,21 @@ abstract class BaseController
         return [
             'old' => $request->post,
         ];
+    }
+
+    private function adminNavData(): array
+    {
+        $user = $this->currentUser();
+        if (($user['role'] ?? 'USER') !== 'ADMIN') {
+            return ['class' => 'is-hidden'];
+        }
+
+        $active = '';
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $path = parse_url((string) $_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '';
+            $active = str_starts_with($path, '/admin') ? ' is-active' : '';
+        }
+
+        return ['class' => trim($active)];
     }
 }
