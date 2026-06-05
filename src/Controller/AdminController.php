@@ -188,7 +188,7 @@ final class AdminController extends BaseController
                 'modalStateJson' => $modal === [] ? 'null' : (json_encode($modal, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: 'null'),
             ],
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/admin.css?v=3">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/admin.css?v=4">',
                 'extraJs' => '<script defer src="/scripts/admin.js?v=1"></script>',
             ],
             'users' => $users,
@@ -213,7 +213,7 @@ final class AdminController extends BaseController
                 'initials' => strtoupper(substr($username, 0, 2)),
                 'rowClass' => $enabled ? '' : 'is-disabled',
                 'statusClass' => $enabled ? 'is-enabled' : 'is-off',
-                'statusLabel' => $enabled ? 'Aktywny' : 'Zablokowany',
+                'statusLabel' => $enabled ? 'Active' : 'Disabled',
                 'toggleValue' => $enabled ? '0' : '1',
                 'toggleTitle' => $enabled ? 'Block user' : 'Unblock user',
                 'toggleIcon' => $enabled ? 'block.svg' : 'unblock.svg',
@@ -254,7 +254,7 @@ final class AdminController extends BaseController
 
     private function requireAdmin(): void
     {
-        $this->requireAuth();
+        $this->requireAccount();
 
         $user = $this->currentUser();
         $profile = $user === null ? null : $this->users->findById((int) $user['id']);
