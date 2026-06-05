@@ -1,0 +1,45 @@
+<main class="dashboard-main study-main study-summary-main">
+    <section class="study-summary">
+        <div class="study-summary-icon"></div>
+        <h1>Session Complete!</h1>
+        <p>Great job! Your focus is paying off. Here's a summary of your session with the "{{deck.name}}" deck.</p>
+
+        <div class="study-summary-grid">
+            <article class="study-summary-card is-correct">
+                <div class="study-summary-card-top">
+                    <span>Correct</span>
+                    <img class="summary-bg-icon" src="/icons/session_summary/correct_back.svg" alt="" aria-hidden="true">
+                </div>
+                <div><strong>{{summary.correct}}</strong><em>cards</em></div>
+                <div class="study-summary-track"><i style="width: {{summary.correctPercent}}%"></i></div>
+            </article>
+            <article class="study-summary-card is-wrong">
+                <div class="study-summary-card-top">
+                    <span>Wrong</span>
+                    <img class="summary-bg-icon" src="/icons/session_summary/wrong_background.svg" alt="" aria-hidden="true">
+                </div>
+                <div><strong>{{summary.wrong}}</strong><em>cards</em></div>
+                <div class="study-summary-track"><i style="width: {{summary.wrongPercent}}%"></i></div>
+            </article>
+            <article class="study-summary-card is-xp">
+                <div class="study-summary-card-top">
+                    <span>XP Earned</span>
+                    <img class="summary-bg-icon" src="/icons/session_summary/xp_backgroud.svg" alt="" aria-hidden="true">
+                </div>
+                <div><strong>+{{summary.xp}}</strong><em>points</em></div>
+                <small>{{summary.levelText}}</small>
+            </article>
+        </div>
+
+        <div class="study-summary-actions">
+            <a href="/dashboard" class="deck-outline-btn">
+                <img src="/icons/session_summary/dashboard.svg" alt="" aria-hidden="true">
+                <span>Dashboard</span>
+            </a>
+            <a href="/decks/{{deck.id}}/study" class="deck-primary-btn">
+                <img src="/icons/session_summary/study_again.svg" alt="" aria-hidden="true">
+                <span>Study Again</span>
+            </a>
+        </div>
+    </section>
+</main>
