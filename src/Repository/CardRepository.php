@@ -47,6 +47,28 @@ final class CardRepository
         return $statement->fetchAll();
     }
 
+    public function findForStudy(int $deckId, int $userId, int $limit = 10): array
+    {
+        $statement = $this->connection->prepare(
+            'SELECT c.id, c.front_question, c.example_sentence, c.image_url, c.answer, c.translated_example
+             FROM cards c
+             LEFT JOIN card_progress cp ON cp.card_id = c.id AND cp.user_id = :user_id
+             WHERE c.deck_id = :deck_id
+             ORDER BY
+                CASE WHEN cp.next_review_at IS NULL OR cp.next_review_at <= NOW() THEN 0 ELSE 1 END,
+                cp.next_review_at ASC NULLS FIRST,
+                COALESCE(cp.mastery_level, 0) ASC,
+                c.created_at DESC
+             LIMIT :limit'
+        );
+        $statement->bindValue('deck_id', $deckId, PDO::PARAM_INT);
+        $statement->bindValue('user_id', $userId, PDO::PARAM_INT);
+        $statement->bindValue('limit', $limit, PDO::PARAM_INT);
+        $statement->execute();
+
+        return $statement->fetchAll();
+    }
+
     public function delete(int $cardId, int $deckId): void
     {
         $statement = $this->connection->prepare('DELETE FROM cards WHERE id = :card_id AND deck_id = :deck_id');

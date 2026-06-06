@@ -1,0 +1,94 @@
+<main class="dashboard-main study-main" data-deck-id="{{deck.id}}" data-study-cards="{{study.cardsJson}}">
+    <section class="study-layout">
+        <aside class="study-sidebar">
+            <a href="/decks/{{deck.id}}" class="study-exit-link" aria-label="Exit session" data-reset-session>
+                <img src="/icons/study_session/exit.svg" alt="Exit" class="study-exit-icon">
+            </a>
+
+            <div class="study-panel">
+                <div class="study-panel-header">
+                    <div class="study-panel-icon">
+                        <img src="/icons/study_session/lang.svg" alt="" aria-hidden="true">
+                    </div>
+                    <div class="study-panel-text">
+                        <div class="study-panel-title">{{deck.name}}</div>
+                        <div class="study-panel-sub">{{deck.description}}</div>
+                    </div>
+                </div>
+                <div class="study-panel-nav">
+                    <div class="study-panel-item is-active"><img src="/icons/study_session/active_session.svg" alt="" aria-hidden="true">Active Session</div>
+                    <div class="study-panel-item"><img src="/icons/study_session/leaderboard.svg" alt="" aria-hidden="true">Leaderboard</div>
+                    <div class="study-panel-item"><img src="/icons/study_session/daily_goal.svg" alt="" aria-hidden="true">Daily Goal</div>
+                </div>
+            </div>
+
+            <div class="study-panel">
+                <div class="study-panel-heading">Current Session Stats</div>
+                <div class="study-stat-cards">
+                    <div class="study-stat-card study-stat-correct">
+                        <span class="study-stat-number" data-correct>0</span>
+                        <span class="study-stat-label">Correct</span>
+                    </div>
+                    <div class="study-stat-card study-stat-wrong">
+                        <span class="study-stat-number" data-wrong>0</span>
+                        <span class="study-stat-label">Wrong</span>
+                    </div>
+                </div>
+                <div class="study-accuracy">
+                    <div class="study-accuracy-row">
+                        <span>Accuracy</span>
+                        <span data-accuracy>0%</span>
+                    </div>
+                    <div class="study-accuracy-track">
+                        <span class="study-accuracy-bar" data-accuracy-bar></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="study-tip-panel">
+                <div class="study-tip-header">
+                    <img src="/icons/study_session/study_tip.svg" alt="" aria-hidden="true" class="study-tip-icon">
+                    <span>Study Tip</span>
+                </div>
+                <p>Try saying the word out loud as you type it to build muscle memory for pronunciation.</p>
+            </div>
+        </aside>
+
+        <section class="study-content">
+            <div class="study-progress-row">
+                <div class="study-progress-label">Session Progress</div>
+                <div class="study-progress-count" data-progress-count>0 of 0 words</div>
+            </div>
+            <div class="study-progress-track">
+                <span class="study-progress-bar" data-progress-bar></span>
+            </div>
+
+            <div class="study-card" data-study-card>
+                <div class="study-card-face study-card-front">
+                    <div class="study-card-tag" data-card-tag>Front</div>
+                    <h2 data-card-front>...</h2>
+                    <p data-card-example-front></p>
+                </div>
+                <div class="study-card-face study-card-back">
+                    <div class="study-card-tag">Back</div>
+                    <h3 data-card-answer>...</h3>
+                    <p class="muted" data-card-translated></p>
+                </div>
+            </div>
+
+            <form class="study-input-form" data-study-form>
+                <input type="text" placeholder="Type translation..." data-card-input>
+                <button type="submit" class="study-submit" data-submit-btn>
+                    <span>Submit</span>
+                    <img src="/icons/study_session/submit.svg" alt="" aria-hidden="true" class="study-submit-icon">
+                </button>
+            </form>
+            <div class="study-actions">
+                <button type="button" data-hint-btn><img src="/icons/study_session/hint.svg" alt="" aria-hidden="true">Hint</button>
+                <button type="button" data-skip-btn><img src="/icons/study_session/skip.svg" alt="" aria-hidden="true">Skip</button>
+                <span class="study-meta">Press Enter to submit</span>
+            </div>
+        </section>
+    </section>
+
+</main>
