@@ -1,0 +1,489 @@
+.explore-main {
+    max-width: 1120px;
+    width: 100%;
+}
+
+.explore-filter-bar,
+.explore-section {
+    width: 100%;
+    max-width: 1120px;
+}
+
+.explore-filter-bar {
+    display: grid;
+    grid-template-columns: minmax(260px, 1.5fr) repeat(4, minmax(150px, 1fr));
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #ffffff;
+    border: 1px solid #e7edf5;
+    border-radius: 18px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+
+.explore-filter-bar.has-target-language {
+    grid-template-columns: minmax(220px, 1.4fr) repeat(5, minmax(130px, 1fr));
+}
+
+.explore-filter-bar .is-hidden {
+    display: none;
+}
+
+.explore-filter-bar label {
+    display: grid;
+    gap: 6px;
+    color: #64748b;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.explore-filter-bar input,
+.explore-filter-bar select,
+.explore-review-form select,
+.explore-review-form textarea,
+.explore-review-edit-form select,
+.explore-review-edit-form textarea {
+    width: 100%;
+    border: 1px solid #dbe5f0;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #0f172a;
+    padding: 11px 12px;
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.explore-filter-bar button {
+    grid-column: 5;
+    grid-row: 2;
+    border: 0;
+    border-radius: 12px;
+    background: #22c55e;
+    color: #ffffff;
+    min-height: 42px;
+    padding: 0 18px;
+    font-weight: 900;
+    cursor: pointer;
+    width: 100%;
+}
+
+.explore-filter-bar select {
+    cursor: pointer;
+}
+
+.explore-filter-bar.has-target-language button {
+    grid-column: 6;
+}
+
+.explore-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.explore-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.explore-card .deck-card-link {
+    flex: 1;
+}
+
+.explore-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    color: #8ca0bb;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.explore-follow-form {
+    padding: 0 16px 16px;
+}
+
+.explore-follow-btn {
+    width: 100%;
+    min-height: 42px;
+    border-radius: 12px;
+    border: 2px solid #22c55e;
+    background: transparent;
+    color: #22c55e;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.explore-follow-btn:hover {
+    background: #22c55e;
+    color: #ffffff;
+}
+
+.explore-follow-btn.is-following,
+.explore-follow-btn:disabled {
+    border-color: #cbd5e1;
+    color: #64748b;
+    background: #f8fafc;
+    cursor: default;
+}
+
+.explore-follow-btn.is-unfollow {
+    border-color: #94a3b8;
+    color: #475569;
+    background: #f8fafc;
+}
+
+.explore-follow-btn.is-unfollow:hover {
+    border-color: #ef4444;
+    color: #ffffff;
+    background: #ef4444;
+}
+
+.explore-deck-hero {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr) 180px;
+    gap: 22px;
+    align-items: center;
+    margin-bottom: 20px;
+    background: #ffffff;
+    border: 1px solid #e7edf5;
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+
+.explore-deck-hero .deck-card-icon {
+    height: 132px;
+    border-radius: 18px;
+}
+
+.explore-deck-copy h1 {
+    margin: 0 0 6px;
+    color: #0f172a;
+    font-size: 1.7rem;
+}
+
+.explore-deck-copy p {
+    margin: 0 0 12px;
+    color: #64748b;
+}
+
+.explore-tabs {
+    display: flex;
+    gap: 18px;
+    margin: 18px 0;
+    border-bottom: 1px solid #dbe5f0;
+    width: 100%;
+}
+
+.explore-tabs a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 0 12px;
+    color: #64748b;
+    font-weight: 900;
+}
+
+.explore-tabs a.is-active {
+    color: #22c55e;
+    border-bottom: 2px solid #22c55e;
+}
+
+.explore-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    flex: 0 0 18px;
+    background: currentColor;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+}
+
+.explore-icon-cards {
+    mask-image: url('/icons/explore/cards.svg');
+    -webkit-mask-image: url('/icons/explore/cards.svg');
+}
+
+.explore-icon-reviews {
+    mask-image: url('/icons/explore/reviews.svg');
+    -webkit-mask-image: url('/icons/explore/reviews.svg');
+}
+
+.explore-icon-follow {
+    mask-image: url('/icons/explore/follow.svg');
+    -webkit-mask-image: url('/icons/explore/follow.svg');
+}
+
+.explore-tab-panel {
+    display: grid;
+    gap: 12px;
+}
+
+.explore-tab-panel.is-hidden {
+    display: none !important;
+}
+
+.explore-tab-panel .mastery-list {
+    display: grid;
+    gap: 12px;
+}
+
+.explore-public-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+    background: #ffffff;
+    border: 1px solid #e7edf5;
+    border-radius: 16px;
+    padding: 16px 18px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+
+.explore-public-card h3 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 0.98rem;
+}
+
+.explore-public-card p {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: 0.88rem;
+}
+
+.explore-review-form,
+.explore-review {
+    background: #ffffff;
+    border: 1px solid #e7edf5;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+
+.explore-review-form {
+    margin-bottom: 16px;
+}
+
+.explore-review-form h2 {
+    margin: 0 0 14px;
+    color: #0f172a;
+}
+
+.explore-review-form form {
+    display: grid;
+    gap: 12px;
+}
+
+.explore-review-form label {
+    display: grid;
+    gap: 6px;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.explore-review-list {
+    display: grid;
+    gap: 12px;
+}
+
+.explore-review-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    color: #64748b;
+}
+
+.explore-review-head > div:first-child {
+    display: grid;
+    gap: 4px;
+}
+
+.explore-review-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.explore-review-icon-btn {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #dbe5f0;
+    border-radius: 10px;
+    background: #ffffff;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    padding: 0;
+}
+
+.explore-review-icon-btn img {
+    width: 16px;
+    height: 16px;
+}
+
+.explore-review-icon-btn.is-danger {
+    border-color: #fecaca;
+}
+
+.explore-review-edit {
+    position: relative;
+}
+
+.explore-review-edit summary {
+    list-style: none;
+}
+
+.explore-review-edit summary::-webkit-details-marker {
+    display: none;
+}
+
+.explore-review-edit-form {
+    position: absolute;
+    right: 0;
+    top: 42px;
+    z-index: 3;
+    width: min(360px, 82vw);
+    display: grid;
+    gap: 10px;
+    padding: 14px;
+    background: #ffffff;
+    border: 1px solid #e7edf5;
+    border-radius: 14px;
+    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.16);
+}
+
+.explore-review-edit-form label {
+    display: grid;
+    gap: 6px;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.explore-review strong {
+    color: #0f172a;
+}
+
+.explore-review p {
+    margin: 10px 0 0;
+    color: #64748b;
+}
+
+.explore-review-stars span {
+    color: #cbd5e1;
+}
+
+.explore-review-stars span.is-filled {
+    color: #22c55e;
+}
+
+html.theme-dark .explore-filter-bar,
+html.theme-dark .explore-deck-hero,
+html.theme-dark .explore-public-card,
+html.theme-dark .explore-review-form,
+html.theme-dark .explore-review {
+    background: #151b23;
+    border-color: #263241;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
+}
+
+html.theme-dark .explore-filter-bar input,
+html.theme-dark .explore-filter-bar select,
+html.theme-dark .explore-review-form select,
+html.theme-dark .explore-review-form textarea {
+    background: #101720;
+    border-color: #263241;
+    color: #f8fafc;
+}
+
+html.theme-dark .explore-deck-copy h1,
+html.theme-dark .explore-public-card h3,
+html.theme-dark .explore-review-form h2,
+html.theme-dark .explore-review strong {
+    color: #f8fafc;
+}
+
+html.theme-dark .explore-deck-copy p,
+html.theme-dark .explore-public-card p,
+html.theme-dark .explore-card-meta,
+html.theme-dark .explore-review p,
+html.theme-dark .explore-review-head {
+    color: #9aa8ba;
+}
+
+html.theme-dark .explore-tabs {
+    border-bottom-color: #263241;
+}
+
+html.theme-dark .explore-tabs a.is-active {
+    color: #86efac;
+    border-bottom-color: #22c55e;
+}
+
+html.theme-dark .explore-review-icon-btn,
+html.theme-dark .explore-review-edit-form {
+    background: #101720;
+    border-color: #263241;
+}
+
+html.theme-dark .explore-review-icon-btn img {
+    filter: invert(1) brightness(1.25) saturate(0.4);
+    opacity: 0.88;
+}
+
+html.theme-dark .explore-review-icon-btn.is-danger {
+    background: #2a1417;
+    border-color: #7f1d1d;
+}
+
+html.theme-dark .explore-follow-btn.is-following,
+html.theme-dark .explore-follow-btn:disabled {
+    background: #101720;
+    border-color: #263241;
+    color: #9aa8ba;
+}
+
+html.theme-dark .explore-follow-btn.is-unfollow {
+    background: #101720;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+html.theme-dark .explore-follow-btn.is-unfollow:hover {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: #ffffff;
+}
+
+@media (max-width: 900px) {
+    .explore-filter-bar,
+    .explore-grid,
+    .explore-deck-hero,
+    .explore-public-card {
+        grid-template-columns: 1fr;
+    }
+
+    .explore-filter-bar button {
+        grid-column: auto;
+        grid-row: auto;
+    }
+}
