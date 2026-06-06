@@ -1,0 +1,133 @@
+<main class="dashboard-main explore-main">
+    <section class="explore-deck-hero">
+        <div class="deck-card-icon deck-card-icon-{{deck.categoryKey}} {{deck.backgroundClass}}" style="{{deck.backgroundStyle}}">
+            <span>{{deck.initial}}</span>
+        </div>
+        <div class="explore-deck-copy">
+            <div class="deck-card-tags">
+                <span class="deck-type-tag">{{deck.typeLabel}}</span>
+                <span class="deck-category-tag deck-category-tag-{{deck.categoryKey}}">{{deck.categoryLabel}}</span>
+            </div>
+            <h1>{{deck.name}}</h1>
+            <p>{{deck.description}}</p>
+            <div class="explore-card-meta">
+                <span>{{deck.badge}}</span>
+                <span>{{deck.cardCount}} cards</span>
+                <span>{{deck.learnerCount}} learners</span>
+                <span>★ {{deck.rating}}</span>
+            </div>
+        </div>
+        <form method="post" action="{{deck.followAction}}" class="explore-follow-form">
+            <input type="hidden" name="return_to" value="/explore/decks/{{deck.id}}">
+            <button type="submit" class="explore-follow-btn {{deck.followClass}}" {{deck.followDisabled}}>
+                <span class="explore-icon explore-icon-follow {{deck.followIconClass}}" aria-hidden="true"></span>
+                <span>{{deck.followLabel}}</span>
+            </button>
+        </form>
+    </section>
+
+    <nav class="explore-tabs">
+        <a href="/explore/decks/{{deck.id}}?tab=cards" class="{{tabs.cardsActive}}">
+            <span class="explore-icon explore-icon-cards" aria-hidden="true"></span>
+            <span>Cards</span>
+        </a>
+        <a href="/explore/decks/{{deck.id}}?tab=reviews" class="{{tabs.reviewsActive}}">
+            <span class="explore-icon explore-icon-reviews" aria-hidden="true"></span>
+            <span>Reviews</span>
+        </a>
+    </nav>
+
+    <section class="explore-tab-panel {{tabs.cardsHidden}}">
+        <div class="mastery-list">
+            <div class="deck-empty {{cardList.emptyClass}}">{{cardList.empty}}</div>
+            {{#cards}}
+            <article class="mastery-card-row explore-public-card">
+                <div>
+                    <h3>{{front}}</h3>
+                    <p>{{example}}</p>
+                </div>
+                <div>
+                    <h3>{{answer}}</h3>
+                    <p>{{translated}}</p>
+                </div>
+            </article>
+            {{/cards}}
+        </div>
+    </section>
+
+    <section class="explore-tab-panel {{tabs.reviewsHidden}}">
+        {{#reviewForm}}
+        <article class="explore-review-form">
+            <h2>Write a Review</h2>
+            <form method="post" action="/explore/decks/{{deck.id}}/review">
+                <label>
+                    <span>Rating</span>
+                    <select name="rating">
+                        {{#ratings}}
+                        <option value="{{value}}" {{selected}}>{{label}}</option>
+                        {{/ratings}}
+                    </select>
+                </label>
+                <label>
+                    <span>Comment</span>
+                    <textarea name="comment" rows="4" placeholder="What do you think about this deck?"></textarea>
+                </label>
+                <button type="submit" class="deck-primary-btn">Save Review</button>
+            </form>
+        </article>
+        {{/reviewForm}}
+
+        <div class="explore-review-list">
+            <div class="deck-empty {{reviewList.emptyClass}}">{{reviewList.empty}}</div>
+            {{#reviews}}
+            <article class="explore-review">
+                <div class="explore-review-head">
+                    <div>
+                        <strong>{{username}}</strong>
+                        <span>{{date}}</span>
+                    </div>
+                    <div class="explore-review-actions">
+                        {{#authorActions}}
+                        <details class="explore-review-edit">
+                            <summary class="explore-review-icon-btn" title="Edit review" aria-label="Edit review">
+                                <img src="/icons/admin_panel/edit.svg" alt="">
+                            </summary>
+                            <form method="post" action="/explore/decks/{{deck.id}}/review" class="explore-review-edit-form">
+                                <label>
+                                    <span>Rating</span>
+                                    <select name="rating">
+                                        {{#ratings}}
+                                        <option value="{{value}}" {{selected}}>{{label}}</option>
+                                        {{/ratings}}
+                                    </select>
+                                </label>
+                                <label>
+                                    <span>Comment</span>
+                                    <textarea name="comment" rows="3">{{comment}}</textarea>
+                                </label>
+                                <button type="submit" class="deck-primary-btn">Save Review</button>
+                            </form>
+                        </details>
+                        {{/authorActions}}
+                        {{#deleteActions}}
+                        <form method="post" action="/explore/decks/{{deck.id}}/reviews/{{id}}/delete" class="inline-form">
+                            <button type="submit" class="explore-review-icon-btn is-danger" title="Delete review" aria-label="Delete review">
+                                <img src="/icons/admin_panel/delete.svg" alt="">
+                            </button>
+                        </form>
+                        {{/deleteActions}}
+                    </div>
+                </div>
+                <div class="explore-review-stars">
+                    <span class="{{star1}}">★</span>
+                    <span class="{{star2}}">★</span>
+                    <span class="{{star3}}">★</span>
+                    <span class="{{star4}}">★</span>
+                    <span class="{{star5}}">★</span>
+                </div>
+                <p>{{comment}}</p>
+            </article>
+            {{/reviews}}
+        </div>
+    </section>
+</main>
