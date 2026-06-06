@@ -1,0 +1,88 @@
+<main class="dashboard-main stats-main stats-detail-main">
+    <section class="stats-hero stats-detail-hero">
+        <div>
+            <p class="stats-kicker">Mastery Report</p>
+            <h1>{{deck.name}}</h1>
+            <p>{{deck.cardCount}} cards in this deck. Review cards marked źle or średnio to improve retention.</p>
+        </div>
+        <div class="deck-detail-actions">
+            <a href="/statistics" class="deck-outline-btn">Export</a>
+            <a href="/decks/{{deck.id}}/study" class="deck-primary-btn">Study Weak Cards</a>
+        </div>
+    </section>
+
+    <section class="mastery-buckets">
+        {{#buckets}}
+        <article class="mastery-bucket {{class}}">
+            <div class="mastery-stars">
+                <span class="star {{star1}}">★</span>
+                <span class="star {{star2}}">★</span>
+                <span class="star {{star3}}">★</span>
+                <span class="star {{star4}}">★</span>
+            </div>
+            <strong>{{count}}</strong>
+            <span>Cards '{{label}}'</span>
+            <img src="/icons/statistics/{{icon}}" alt="" aria-hidden="true">
+        </article>
+        {{/buckets}}
+    </section>
+
+    <section class="dashboard-section">
+        <div class="section-heading-row stats-table-heading">
+            <h2>Individual Card Mastery</h2>
+            <form method="get" action="/statistics/decks/{{deck.id}}" class="stats-filter-form">
+                <label>
+                    <span>Sort</span>
+                    <select name="sort" onchange="this.form.submit()">
+                        {{#filters.sortOptions}}
+                        <option value="{{value}}" {{selected}}>{{label}}</option>
+                        {{/filters.sortOptions}}
+                    </select>
+                </label>
+                <label>
+                    <span>Stars</span>
+                    <select name="stars" onchange="this.form.submit()">
+                        {{#filters.starOptions}}
+                        <option value="{{value}}" {{selected}}>{{label}}</option>
+                        {{/filters.starOptions}}
+                    </select>
+                </label>
+            </form>
+        </div>
+
+        <div class="mastery-table-head">
+            <span>Card</span>
+            <span>Mastery Level</span>
+            <span>Last Reviewed</span>
+        </div>
+        <div class="mastery-list">
+            <div class="deck-cards-empty {{deck.cardsEmptyClass}}">{{deck.cardsEmpty}}</div>
+            {{#cards}}
+            <article class="mastery-card-row">
+                <div class="mastery-card-front">
+                    <span class="{{statusClass}}">
+                        <img src="/icons/statistics/{{statusIcon}}" alt="" aria-hidden="true">
+                    </span>
+                    <div>
+                        <h3>{{front}}</h3>
+                        <p>{{answer}}</p>
+                    </div>
+                </div>
+                <div class="mastery-level {{statusClass}}">
+                    <div class="mastery-stars">
+                        <span class="star {{star1}}">★</span>
+                        <span class="star {{star2}}">★</span>
+                        <span class="star {{star3}}">★</span>
+                        <span class="star {{star4}}">★</span>
+                    </div>
+                    <span>{{statusLabel}}</span>
+                </div>
+                <div class="mastery-dates">
+                    <span>{{last}}</span>
+                    <small>Next: {{next}}</small>
+                </div>
+            </article>
+            {{/cards}}
+        </div>
+    </section>
+</main>
