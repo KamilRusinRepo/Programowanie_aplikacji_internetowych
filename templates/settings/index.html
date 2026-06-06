@@ -1,4 +1,4 @@
-<main class="dashboard-main settings-main">
+<main class="dashboard-main settings-main" data-password-modal-open="{{settings.passwordModalOpen}}">
     <section class="settings-header">
         <h1>Profile Settings</h1>
     </section>
@@ -12,32 +12,36 @@
             </div>
         </div>
 
-        <div class="settings-form">
+        <form method="post" action="/settings/profile" class="settings-form">
             <label class="settings-field">
-                <span>Full Name</span>
-                <input type="text" value="{{displayName}}" placeholder="Full Name">
+                <span>Username</span>
+                <input type="text" name="username" value="{{user.username}}" placeholder="Username" required>
+                <small>{{profileErrors.username}}</small>
             </label>
 
             <label class="settings-field">
                 <span>Email Address</span>
-                <input type="email" value="{{user.email}}" placeholder="Email Address" readonly disabled>
+                <input type="email" name="email" value="{{user.email}}" placeholder="Email Address" required>
+                <small>{{profileErrors.email}}</small>
             </label>
-        </div>
 
-        <div class="settings-actions">
-            <button type="button" class="settings-save">Save Changes</button>
-        </div>
+            <div class="settings-actions">
+                <button type="submit" class="settings-save">Save Changes</button>
+            </div>
+        </form>
     </section>
 
     <section class="settings-section">
         <h2>Security</h2>
         <div class="settings-card settings-row">
-            <div class="settings-row-icon">🔒</div>
+            <div class="settings-row-icon">
+                <img src="/icons/settings/password.svg" alt="" aria-hidden="true">
+            </div>
             <div>
                 <h3>Password</h3>
-                <p>Last changed 3 months ago</p>
+                <p>{{settings.passwordChangedText}}</p>
             </div>
-            <button type="button" class="settings-outline">Change Password</button>
+            <button type="button" class="settings-outline" data-open-password-modal>Change Password</button>
         </div>
     </section>
 
@@ -45,28 +49,34 @@
         <h2>Preferences</h2>
         <div class="settings-card settings-list">
             <div class="settings-list-item">
-                <div class="settings-row-icon">🎨</div>
+                <div class="settings-row-icon">
+                    <img src="/icons/settings/theme.svg" alt="" aria-hidden="true">
+                </div>
                 <div class="settings-list-info">
                     <h3>Appearance</h3>
                     <p>Choose light or dark theme</p>
                 </div>
-                <div class="settings-segment">
-                    <button type="button" class="is-active">Light</button>
-                    <button type="button">Dark</button>
+                <div class="settings-segment" data-theme-segment>
+                    <button type="button" class="is-active" data-theme-option="light">Light</button>
+                    <button type="button" data-theme-option="dark">Dark</button>
                 </div>
             </div>
 
             <div class="settings-list-item">
-                <div class="settings-row-icon">🌐</div>
+                <div class="settings-row-icon">
+                    <img src="/icons/settings/language.svg" alt="" aria-hidden="true">
+                </div>
                 <div class="settings-list-info">
                     <h3>Language</h3>
                     <p>Select your preferred language</p>
                 </div>
-                <button type="button" class="settings-pill">English (US)</button>
+                <button type="button" class="settings-pill" data-language-toggle>English (US)</button>
             </div>
 
             <div class="settings-list-item">
-                <div class="settings-row-icon">🔔</div>
+                <div class="settings-row-icon">
+                    <img src="/icons/settings/reminder.svg" alt="" aria-hidden="true">
+                </div>
                 <div class="settings-list-info">
                     <h3>Daily Reminders</h3>
                     <p>Get notified for daily practice</p>
@@ -78,4 +88,53 @@
             </div>
         </div>
     </section>
+
+    <div class="settings-modal" data-password-modal hidden>
+        <form method="post" action="/settings/password" class="settings-modal-card">
+            <div class="settings-modal-header">
+                <h2>Change Password</h2>
+                <button type="button" data-close-password-modal aria-label="Close">×</button>
+            </div>
+
+            <div class="settings-modal-body">
+                <label class="settings-field">
+                    <span>Current Password</span>
+                    <div class="password-field">
+                        <input type="password" name="current_password" data-password-field autocomplete="current-password">
+                        <button type="button" class="password-toggle" data-password-toggle>
+                            <img src="/icons/login/eye.svg" alt="Show password" class="password-icon">
+                        </button>
+                    </div>
+                    <small data-password-error="current_password">{{passwordErrors.current_password}}</small>
+                </label>
+
+                <label class="settings-field">
+                    <span>New Password</span>
+                    <div class="password-field">
+                        <input type="password" name="password" data-password-field autocomplete="new-password" minlength="8">
+                        <button type="button" class="password-toggle" data-password-toggle>
+                            <img src="/icons/login/eye.svg" alt="Show password" class="password-icon">
+                        </button>
+                    </div>
+                    <small data-password-error="password">{{passwordErrors.password}}</small>
+                </label>
+
+                <label class="settings-field">
+                    <span>Confirm New Password</span>
+                    <div class="password-field">
+                        <input type="password" name="password_confirmation" data-password-field autocomplete="new-password" minlength="8">
+                        <button type="button" class="password-toggle" data-password-toggle>
+                            <img src="/icons/login/eye.svg" alt="Show password" class="password-icon">
+                        </button>
+                    </div>
+                    <small data-password-error="password_confirmation">{{passwordErrors.password_confirmation}}</small>
+                </label>
+            </div>
+
+            <div class="settings-modal-footer">
+                <button type="button" class="settings-outline" data-close-password-modal>Anuluj</button>
+                <button type="submit" class="settings-save">Save Password</button>
+            </div>
+        </form>
+    </div>
 </main>

@@ -1,0 +1,26 @@
+<main class="dashboard-main deck-list-main">
+    <section class="deck-list-hero">
+        <div>
+            <h1>Statistics</h1>
+            <p>Choose a deck to inspect mastery, weak cards, and next review dates.</p>
+        </div>
+        <a href="/statistics" class="deck-outline-btn">Stats Overview</a>
+    </section>
+
+    <section class="deck-grid">
+        <div class="deck-empty {{statistics.emptyClass}}">{{statistics.empty}}</div>
+        {{#decks}}
+        <article class="deck-card">
+            <a class="deck-card-link" href="/statistics/decks/{{id}}">
+                <div class="deck-card-icon deck-card-icon-general">{{initial}}</div>
+                <div class="deck-card-body">
+                    <h3>{{name}}</h3>
+                    <p>{{cardCount}} cards • {{correct}} good • {{wrong}} wrong</p>
+                    <div class="card-progress"><span style="width: {{mastery}}%"></span></div>
+                    <div class="deck-card-footer"><span>Mastery</span><strong>{{mastery}}%</strong></div>
+                </div>
+            </a>
+        </article>
+        {{/decks}}
+    </section>
+</main>

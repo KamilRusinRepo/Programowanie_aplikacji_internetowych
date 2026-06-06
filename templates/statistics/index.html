@@ -1,0 +1,145 @@
+<main class="dashboard-main stats-overview-main">
+    <section class="stats-overview-top">
+        <div class="stats-overview-brand">
+            <strong>FlashMind Stats</strong>
+        </div>
+
+        <div class="stats-period-toggle" data-stats-period>
+            <button type="button" data-period="daily">Daily</button>
+            <button type="button" data-period="weekly">Weekly</button>
+            <button type="button" class="is-active" data-period="all">All-time</button>
+        </div>
+    </section>
+
+    <section class="stats-profile-card">
+        <div class="stats-profile-left">
+            <div class="stats-profile-badge">
+                <span>★</span>
+                <small>LVL {{statsProfile.level}}</small>
+            </div>
+            <div>
+                <h1>{{statsProfile.name}}</h1>
+                <p>On a {{statsProfile.streak}}-day study streak!</p>
+            </div>
+        </div>
+        <div class="stats-profile-metrics">
+            <div>
+                <span>Global Rank</span>
+                <strong>#{{statsProfile.globalRank}}</strong>
+            </div>
+            <div>
+                <span>Total XP</span>
+                <strong>{{statsProfile.totalXp}}</strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-overview-grid">
+        <article class="stats-overview-card">
+            <img src="/icons/statistics/mastered_cards.svg" alt="" aria-hidden="true" class="stats-overview-icon">
+            <span>Total Mastered</span>
+            <strong data-stat-value="mastered">{{overview.allMastered}}</strong>
+            <small>Cards successfully learned</small>
+        </article>
+        <article class="stats-overview-card">
+            <img src="/icons/statistics/study_time.svg" alt="" aria-hidden="true" class="stats-overview-icon">
+            <span>Study Time</span>
+            <strong data-stat-value="studyTime">{{overview.allStudyTime}}</strong>
+            <small>Time spent in study sessions</small>
+        </article>
+        <article class="stats-overview-card">
+            <img src="/icons/statistics/accuracy.svg" alt="" aria-hidden="true" class="stats-overview-icon">
+            <span>Avg. Accuracy</span>
+            <strong data-stat-value="accuracy">{{overview.allAccuracy}}</strong>
+            <small>Correct answers across the period</small>
+        </article>
+    </section>
+
+    <section class="stats-dashboard-grid">
+        <article class="stats-panel stats-consistency-panel">
+            <div class="stats-panel-title">
+                <h2>Learning Consistency</h2>
+                <div class="stats-heat-legend">
+                    <span>Less</span>
+                    <i class="level-1"></i><i class="level-2"></i><i class="level-3"></i><i class="level-4"></i><i class="level-5"></i>
+                    <span>More</span>
+                </div>
+            </div>
+            <div class="stats-heatmap-wrap">
+                <div class="stats-heatmap-months" style="grid-template-columns: repeat({{heatmap.columns}}, 10px);">
+                    {{#heatmapMonths}}
+                    <span style="grid-column: {{gridColumn}}">{{label}}</span>
+                    {{/heatmapMonths}}
+                </div>
+                <div class="stats-heatmap-body">
+                    <div class="stats-heatmap-weekdays">
+                        <span>Mon</span>
+                        <span></span>
+                        <span>Wed</span>
+                        <span></span>
+                        <span>Fri</span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div class="stats-heatmap" style="grid-template-columns: repeat({{heatmap.columns}}, 10px);">
+                        {{#heatmapDays}}
+                        <span class="stats-heat-day {{level}} {{mutedClass}}" style="grid-column: {{gridColumn}}; grid-row: {{gridRow}}" aria-label="{{tooltip}}">
+                            <em>{{tooltip}}</em>
+                        </span>
+                        {{/heatmapDays}}
+                    </div>
+                </div>
+            </div>
+            <div class="stats-streak-note">
+                <strong>{{statsProfile.streak}} Day Streak!</strong>
+                <span>You are building a steady learning rhythm. Keep it up!</span>
+            </div>
+        </article>
+
+        <div class="stats-dashboard-lower-grid">
+            <article class="stats-panel">
+                <div class="stats-panel-title">
+                    <h2>Weekly Performance</h2>
+                    <p>XP earned each day this week.</p>
+                </div>
+                <div class="stats-bars">
+                    {{#performance}}
+                    <div class="stats-bar-item {{activeClass}}">
+                        <div class="stats-bar" style="height: {{height}}%">
+                            <span>{{xp}} XP</span>
+                        </div>
+                        <strong>{{day}}</strong>
+                    </div>
+                    {{/performance}}
+                </div>
+            </article>
+
+            <aside class="stats-panel stats-deck-mastery">
+                <div class="stats-panel-title">
+                    <h2>Deck Mastery</h2>
+                </div>
+                <div class="stats-deck-list">
+                    {{#masteryDecks}}
+                    <a href="/statistics/decks/{{id}}" class="stats-deck-item">
+                        <div>
+                            <strong>{{name}}</strong>
+                            <span>{{mastered}} Cards Mastered</span>
+                        </div>
+                        <em>{{mastery}}%</em>
+                        <i><b class="{{barClass}}" style="width: {{mastery}}%"></b></i>
+                    </a>
+                    {{/masteryDecks}}
+                </div>
+                <a href="/statistics/decks" class="stats-view-all">View All Decks</a>
+            </aside>
+        </div>
+    </section>
+
+    <script type="application/json" data-stats-overview-json>
+        {
+            "daily": {"mastered": "{{overview.dailyMastered}}", "studyTime": "{{overview.dailyStudyTime}}", "accuracy": "{{overview.dailyAccuracy}}"},
+            "weekly": {"mastered": "{{overview.weeklyMastered}}", "studyTime": "{{overview.weeklyStudyTime}}", "accuracy": "{{overview.weeklyAccuracy}}"},
+            "all": {"mastered": "{{overview.allMastered}}", "studyTime": "{{overview.allStudyTime}}", "accuracy": "{{overview.allAccuracy}}"}
+        }
+    </script>
+</main>
