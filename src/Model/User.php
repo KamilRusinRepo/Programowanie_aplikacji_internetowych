@@ -14,6 +14,7 @@ final class User
         public readonly ?string $roleName,
         public readonly bool $isEnabled,
         public readonly ?string $createdAt = null,
+        public readonly ?string $passwordChangedAt = null,
     ) {
     }
 
@@ -27,6 +28,7 @@ final class User
             $row['role_name'] ?? null,
             (bool) $row['is_enabled'],
             $row['created_at'] ?? null,
+            $row['password_changed_at'] ?? null,
         );
     }
 }
