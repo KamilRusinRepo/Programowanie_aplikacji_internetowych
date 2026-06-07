@@ -133,4 +133,14 @@ final class AuthService
             'user' => $user,
         ];
     }
+
+    public function usernameExists(string $username): bool
+    {
+        return $this->users->usernameExistsForAnotherUser($username);
+    }
+
+    public function emailExists(string $email): bool
+    {
+        return $this->users->emailExistsForAnotherUser($email);
+    }
 }
