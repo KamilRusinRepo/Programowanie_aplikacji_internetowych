@@ -5,16 +5,103 @@
             <p>{{deck.description}}</p>
         </div>
         <div class="deck-detail-actions">
-            <button type="button" class="deck-outline-btn">Import</button>
-            <button type="button" class="deck-primary-btn">Start Study</button>
+            <a href="/decks/{{deck.id}}/edit" class="deck-outline-btn">Edit Deck</a>
+            <form method="post" action="/decks/{{deck.id}}/import" enctype="multipart/form-data" class="deck-import-form">
+                <label class="deck-outline-btn">
+                    <span>Import</span>
+                    <input type="file" name="csv_file" accept=".csv,text/csv" hidden onchange="this.form.submit()">
+                </label>
+            </form>
+            <a href="/decks/{{deck.id}}/export" class="deck-outline-btn">Export</a>
+            <button type="button" class="deck-outline-btn" data-toggle-add-card>Add Card</button>
+            <a href="/decks/{{deck.id}}/study" class="deck-primary-btn">Start Study</a>
             <form method="post" action="/decks/{{deck.id}}/delete" class="deck-delete-form" data-confirm-delete>
                 <button type="submit" class="deck-danger-btn">Delete Deck</button>
             </form>
         </div>
     </section>
 
-    <section class="deck-cards">
-        {{raw.cards}}
+    {{#deckTabs}}
+    <nav class="deck-detail-tabs" aria-label="Deck sections">
+        <a href="/decks/{{deck.id}}?tab=cards" class="{{cardsActive}}">
+            <span class="explore-icon explore-icon-cards" aria-hidden="true"></span>
+            <span>Cards</span>
+        </a>
+        <a href="/decks/{{deck.id}}?tab=reviews" class="{{reviewsActive}}">
+            <span class="explore-icon explore-icon-reviews" aria-hidden="true"></span>
+            <span>Reviews</span>
+        </a>
+    </nav>
+    {{/deckTabs}}
+
+    {{#publicReviews}}
+    <section class="deck-reviews {{panels.reviewsHidden}}" id="deck-reviews">
+        <div class="section-heading-row">
+            <div>
+                <h2>Reviews</h2>
+                <p>Average rating {{averageRating}} • {{reviewCount}} reviews</p>
+            </div>
+            <a href="/explore/decks/{{deck.id}}?tab=reviews" class="section-link">View Public Page</a>
+        </div>
+
+        <div class="deck-review-list">
+            <div class="deck-empty {{emptyClass}}">{{empty}}</div>
+            {{#reviews}}
+            <article class="deck-review-card">
+                <div class="deck-review-head">
+                    <strong>{{username}}</strong>
+                    <span>{{date}}</span>
+                </div>
+                <div class="deck-review-stars">
+                    <span class="{{star1}}">★</span>
+                    <span class="{{star2}}">★</span>
+                    <span class="{{star3}}">★</span>
+                    <span class="{{star4}}">★</span>
+                    <span class="{{star5}}">★</span>
+                </div>
+                <p>{{comment}}</p>
+            </article>
+            {{/reviews}}
+        </div>
+    </section>
+    {{/publicReviews}}
+
+    <section class="deck-cards {{panels.cardsHidden}}" id="deck-cards">
+        <div class="deck-cards-empty {{deck.cardsEmptyClass}}">{{deck.cardsEmpty}}</div>
+
+        {{#cards}}
+        <article class="deck-card-row">
+            <div class="deck-card-col">
+                <span class="deck-card-label">Front (Question)</span>
+                <h3>{{front}}</h3>
+                <p class="card-example {{exampleClass}}">{{example}}</p>
+            </div>
+            <div class="deck-card-col">
+                <span class="deck-card-label">Back (Answer)</span>
+                <p>{{answer}}</p>
+                <p class="card-example muted {{translatedClass}}">{{translated}}</p>
+            </div>
+            <div class="deck-card-media">
+                <img src="{{imageSrc}}" alt="{{imageAlt}}">
+            </div>
+            <div class="deck-card-actions" aria-label="Card actions">
+                <button type="button" class="card-icon-btn" title="Edit" aria-label="Edit"
+                    data-card-id="{{id}}"
+                    data-card-front="{{front}}"
+                    data-card-example="{{example}}"
+                    data-card-image="{{imageUrl}}"
+                    data-card-answer="{{answer}}"
+                    data-card-translated="{{translated}}">
+                    <img src="/icons/deck/edit_button.svg" alt="Edit">
+                </button>
+                <form method="post" action="/decks/{{deck.id}}/cards/{{id}}/delete" class="inline-form" data-confirm-card-delete>
+                    <button type="submit" class="card-icon-btn danger" title="Delete" aria-label="Delete">
+                        <img src="/icons/deck/delete_button.svg" alt="Delete">
+                    </button>
+                </form>
+            </div>
+        </article>
+        {{/cards}}
 
         <button type="button" class="deck-add-card" data-toggle-add-card>
             <span class="deck-add-icon">+</span>
@@ -52,79 +139,3 @@
         </form>
     </section>
 </main>
-
-<script>
-    const toggleAdd = document.querySelector('[data-toggle-add-card]');
-    const addForm = document.querySelector('[data-add-card-form]');
-    const cancelAdd = document.querySelector('[data-cancel-add]');
-    const deleteForm = document.querySelector('[data-confirm-delete]');
-    const cardDeleteForms = document.querySelectorAll('[data-confirm-card-delete]');
-    const editButtons = document.querySelectorAll('.card-icon-btn[title="Edit"]');
-    const cardForm = document.querySelector('.deck-card-form');
-    const cardFormTitle = document.querySelector('[data-card-form-title]');
-    const defaultAction = cardForm ? cardForm.dataset.defaultAction : '';
-
-    if (toggleAdd && addForm) {
-        toggleAdd.addEventListener('click', () => {
-            addForm.hidden = false;
-            addForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            if (cardForm && defaultAction) {
-                cardForm.action = defaultAction;
-            }
-            if (cardFormTitle) {
-                cardFormTitle.textContent = 'Add New Card';
-            }
-            if (cardForm) {
-                cardForm.reset();
-            }
-        });
-    }
-
-    if (cancelAdd && addForm) {
-        cancelAdd.addEventListener('click', () => {
-            addForm.hidden = true;
-        });
-    }
-
-    editButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-            if (!addForm || !cardForm) return;
-
-            const cardId = button.dataset.cardId;
-            if (cardId) {
-                cardForm.action = '/decks/{{deck.id}}/cards/' + cardId;
-            }
-
-            cardForm.querySelector('#front-question').value = button.dataset.cardFront || '';
-            cardForm.querySelector('#example-sentence').value = button.dataset.cardExample || '';
-            cardForm.querySelector('#image-url').value = button.dataset.cardImage || '';
-            cardForm.querySelector('#answer').value = button.dataset.cardAnswer || '';
-            cardForm.querySelector('#translated-example').value = button.dataset.cardTranslated || '';
-
-            if (cardFormTitle) {
-                cardFormTitle.textContent = 'Edit Card';
-            }
-
-            addForm.hidden = false;
-            addForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-    });
-
-    if (deleteForm) {
-        deleteForm.addEventListener('submit', (event) => {
-            const ok = window.confirm('Are you sure you want to delete this deck? This cannot be undone.');
-            if (!ok) {
-                event.preventDefault();
-            }
-        });
-    }
-
-    cardDeleteForms.forEach((form) => {
-        form.addEventListener('submit', (event) => {
-            const ok = window.confirm('Delete this card?');
-            if (!ok) {
-                event.preventDefault();
-            }
-        });
-    });
-</script>

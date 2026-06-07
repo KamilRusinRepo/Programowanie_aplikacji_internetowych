@@ -1,11 +1,11 @@
 <main class="dashboard-main deck-create-main">
     <section class="deck-create-hero">
-        <h1>Create New Deck</h1>
-        <p>Organize your learning with a custom set of flashcards.</p>
+        <h1>{{form.heading}}</h1>
+        <p>{{form.subheading}}</p>
     </section>
 
     <section class="deck-create-card">
-        <form method="post" action="/decks" class="deck-create-form" data-deck-form>
+        <form method="post" action="{{form.action}}" class="deck-create-form" data-deck-form>
             <div class="form-field">
                 <label for="deck-name">Deck Name</label>
                 <input id="deck-name" name="name" type="text" placeholder="e.g. European History, Advanced Japanese..." value="{{old.name}}">
@@ -21,11 +21,11 @@
                 <label>Deck Type</label>
                 <div class="deck-type-toggle" role="group" aria-label="Deck type">
                     <label class="toggle-option">
-                        <input type="radio" name="deck_type" value="general" checked>
+                        <input type="radio" name="deck_type" value="general" {{old.generalChecked}}>
                         <span>General</span>
                     </label>
                     <label class="toggle-option">
-                        <input type="radio" name="deck_type" value="language">
+                        <input type="radio" name="deck_type" value="language" {{old.languageChecked}}>
                         <span>Language</span>
                     </label>
                 </div>
@@ -37,12 +37,12 @@
                     <label for="source-language">Source Language</label>
                     <select id="source-language" name="source_language">
                         <option value="">Select language</option>
-                        <option value="English">English</option>
-                        <option value="Polish">Polish</option>
-                        <option value="German">German</option>
-                        <option value="Spanish">Spanish</option>
-                        <option value="French">French</option>
-                        <option value="Japanese">Japanese</option>
+                        <option value="English" {{old.sourceEnglishSelected}}>English</option>
+                        <option value="Polish" {{old.sourcePolishSelected}}>Polish</option>
+                        <option value="German" {{old.sourceGermanSelected}}>German</option>
+                        <option value="Spanish" {{old.sourceSpanishSelected}}>Spanish</option>
+                        <option value="French" {{old.sourceFrenchSelected}}>French</option>
+                        <option value="Japanese" {{old.sourceJapaneseSelected}}>Japanese</option>
                     </select>
                     <small class="field-error">{{errors.source_language}}</small>
                 </div>
@@ -51,12 +51,12 @@
                     <label for="target-language">Target Language</label>
                     <select id="target-language" name="target_language">
                         <option value="">Select language</option>
-                        <option value="English">English</option>
-                        <option value="Polish">Polish</option>
-                        <option value="German">German</option>
-                        <option value="Spanish">Spanish</option>
-                        <option value="French">French</option>
-                        <option value="Japanese">Japanese</option>
+                        <option value="English" {{old.targetEnglishSelected}}>English</option>
+                        <option value="Polish" {{old.targetPolishSelected}}>Polish</option>
+                        <option value="German" {{old.targetGermanSelected}}>German</option>
+                        <option value="Spanish" {{old.targetSpanishSelected}}>Spanish</option>
+                        <option value="French" {{old.targetFrenchSelected}}>French</option>
+                        <option value="Japanese" {{old.targetJapaneseSelected}}>Japanese</option>
                     </select>
                     <small class="field-error">{{errors.target_language}}</small>
                 </div>
@@ -66,12 +66,20 @@
                 <label for="deck-category">Category</label>
                 <select id="deck-category" name="category">
                     <option value="">Select category</option>
-                    <option value="Academic">Academic</option>
-                    <option value="Language">Language</option>
-                    <option value="History">History</option>
-                    <option value="Science">Science</option>
-                    <option value="Personal">Personal</option>
+                    <option value="Academic" {{old.categoryAcademicSelected}}>Academic</option>
+                    <option value="Language" {{old.categoryLanguageSelected}}>Language</option>
+                    <option value="History" {{old.categoryHistorySelected}}>History</option>
+                    <option value="Science" {{old.categoryScienceSelected}}>Science</option>
+                    <option value="Personal" {{old.categoryPersonalSelected}}>Personal</option>
+                    <option value="Tech" {{old.categoryTechSelected}}>Tech</option>
                 </select>
+            </div>
+
+            <div class="form-field">
+                <label for="deck-background">Background Photo URL</label>
+                <input id="deck-background" name="background_url" type="url" placeholder="https://example.com/image.jpg" value="{{old.background_url}}">
+                <small class="field-help">Paste an http or https image URL to replace the default deck background.</small>
+                <small class="field-error">{{errors.background_url}}</small>
             </div>
 
             <div class="deck-public">
@@ -80,44 +88,15 @@
                     <p>Allow others to find and study this deck</p>
                 </div>
                 <label class="settings-toggle deck-toggle">
-                    <input type="checkbox" name="is_public">
+                    <input type="checkbox" name="is_public" {{old.isPublicChecked}}>
                     <span></span>
                 </label>
             </div>
 
             <div class="deck-create-actions">
-                <button type="submit" class="deck-create-btn">Create Deck</button>
-                <a href="/dashboard" class="deck-cancel-btn">Cancel</a>
+                <button type="submit" class="deck-create-btn">{{form.submitLabel}}</button>
+                <a href="{{form.cancelUrl}}" class="deck-cancel-btn">Cancel</a>
             </div>
         </form>
     </section>
 </main>
-
-<script>
-    const deckTypeInputs = document.querySelectorAll('input[name="deck_type"]');
-    const targetLanguageField = document.querySelector('[data-target-language]');
-    const languageRow = document.querySelector('[data-language-row]');
-
-    const updateLanguageFields = () => {
-        const selected = document.querySelector('input[name="deck_type"]:checked');
-        if (!selected || !targetLanguageField) return;
-
-        if (selected.value === 'general') {
-            targetLanguageField.style.display = 'none';
-            if (languageRow) {
-                languageRow.classList.add('is-single');
-            }
-        } else {
-            targetLanguageField.style.display = 'block';
-            if (languageRow) {
-                languageRow.classList.remove('is-single');
-            }
-        }
-    };
-
-    deckTypeInputs.forEach((input) => {
-        input.addEventListener('change', updateLanguageFields);
-    });
-
-    updateLanguageFields();
-</script>

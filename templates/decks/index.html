@@ -8,6 +8,57 @@
     </section>
 
     <section class="deck-grid">
-        {{raw.cards}}
+        <div class="deck-empty {{deckList.emptyClass}}">{{deckList.empty}}</div>
+        {{#decks}}
+        <article class="deck-card">
+            <a class="deck-card-link" href="{{url}}">
+                <div class="deck-card-icon deck-card-icon-{{categoryKey}} {{backgroundClass}}" style="{{backgroundStyle}}">
+                    <span>{{icon}}</span>
+                </div>
+                <div class="deck-card-body">
+                    <div class="deck-card-tags">
+                        <span class="deck-type-tag">{{typeLabel}}</span>
+                        <span class="deck-category-tag deck-category-tag-{{categoryKey}}">{{categoryLabel}}</span>
+                    </div>
+                    <h3>{{name}}</h3>
+                    <p>{{badge}} • {{cardCount}} cards</p>
+                    <div class="card-progress"><span style="width: {{mastery}}%"></span></div>
+                    <div class="deck-card-footer"><span>Mastery</span><strong>{{mastery}}%</strong></div>
+                </div>
+            </a>
+        </article>
+        {{/decks}}
+    </section>
+
+    <section class="deck-list-section">
+        <div class="section-heading-row">
+            <h2>Following Decks</h2>
+            <a href="/explore" class="section-link">Explore More</a>
+        </div>
+        <div class="deck-grid">
+            <div class="deck-empty {{followingDecks.emptyClass}}">{{followingDecks.empty}}</div>
+            {{#followedDecks}}
+            <article class="deck-card">
+                <a class="deck-card-link" href="{{url}}">
+                    <div class="deck-card-icon deck-card-icon-{{categoryKey}} {{backgroundClass}}" style="{{backgroundStyle}}">
+                        <span>{{icon}}</span>
+                    </div>
+                    <div class="deck-card-body">
+                        <div class="deck-card-tags">
+                            <span class="deck-type-tag">{{typeLabel}}</span>
+                            <span class="deck-category-tag deck-category-tag-{{categoryKey}}">{{categoryLabel}}</span>
+                        </div>
+                        <h3>{{name}}</h3>
+                        <p>{{badge}} • {{cardCount}} cards</p>
+                        <div class="deck-card-footer"><span>Community</span><strong>★ {{rating}}</strong></div>
+                    </div>
+                </a>
+                <form method="post" action="{{unfollowAction}}" class="deck-follow-actions">
+                    <input type="hidden" name="return_to" value="/decks">
+                    <button type="submit" class="deck-outline-btn">Unfollow</button>
+                </form>
+            </article>
+            {{/followedDecks}}
+        </div>
     </section>
 </main>

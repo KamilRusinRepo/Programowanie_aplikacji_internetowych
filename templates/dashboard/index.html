@@ -11,8 +11,8 @@
                 <span class="metric-value">{{stats.streak}} days</span>
             </div>
             <div class="metric-pill">
-                <span class="metric-icon metric-icon-soft">✓</span>
-                <span class="metric-value">{{stats.dueCards}}</span>
+                <span class="metric-icon metric-icon-soft {{dailyGoal.iconClass}}">✓</span>
+                <span class="metric-value">{{dailyGoal.text}}</span>
             </div>
             <div class="metric-pill metric-pill-strong">
                 <div class="metric-progress-text">
@@ -27,31 +27,23 @@
     <section class="dashboard-section">
         <div class="section-heading-row">
             <h2>Continue Learning</h2>
-            <a href="#" class="section-link">View All Reviews</a>
+            <a href="/decks" class="section-link">View All Reviews</a>
         </div>
 
         <div class="learning-grid">
+            <div class="deck-empty {{continueLearning.emptyClass}}">{{continueLearning.empty}}</div>
+            {{#continueDecks}}
             <article class="learning-card">
-                <div class="learning-card-icon is-mint">🌐</div>
+                <div class="learning-card-icon learning-card-icon-{{categoryKey}}">{{initial}}</div>
                 <div class="learning-card-content">
-                    <h3>Spanish Vocabulary</h3>
-                    <p>45 cards due for review</p>
-                    <div class="card-progress-row"><span>Mastery</span><span>72%</span></div>
-                    <div class="card-progress"><span style="width: 72%"></span></div>
+                    <h3>{{name}}</h3>
+                    <p>{{due}} cards due for review</p>
+                    <div class="card-progress-row"><span>Mastery</span><span>{{mastery}}%</span></div>
+                    <div class="card-progress"><span style="width: {{mastery}}%"></span></div>
                 </div>
-                <a href="#" class="session-btn">Start Session</a>
+                <a href="/decks/{{id}}/study" class="session-btn">Start Session</a>
             </article>
-
-            <article class="learning-card">
-                <div class="learning-card-icon is-sand">🎨</div>
-                <div class="learning-card-content">
-                    <h3>Modern Art History</h3>
-                    <p>12 cards due for review</p>
-                    <div class="card-progress-row"><span>Mastery</span><span>48%</span></div>
-                    <div class="card-progress"><span style="width: 48%"></span></div>
-                </div>
-                <a href="#" class="session-btn">Start Session</a>
-            </article>
+            {{/continueDecks}}
         </div>
     </section>
 
@@ -62,71 +54,59 @@
         </div>
 
         <div class="deck-grid">
-            <article class="deck-card deck-card-mint">
-                <div class="deck-card-icon">Σ</div>
-                <div class="deck-card-body">
-                    <h3>Mathematics 101</h3>
-                    <p>156 Cards • Last studied 2d ago</p>
-                    <div class="card-progress"><span style="width: 85%"></span></div>
-                    <div class="deck-card-footer"><span></span><strong>85%</strong></div>
-                </div>
+            <div class="deck-empty {{dashboardDecks.emptyClass}}">{{dashboardDecks.empty}}</div>
+            {{#myDecks}}
+            <article class="deck-card">
+                <a class="deck-card-link" href="/decks/{{id}}">
+                    <div class="deck-card-icon deck-card-icon-{{categoryKey}} {{backgroundClass}}" style="{{backgroundStyle}}">
+                        <span>{{initial}}</span>
+                    </div>
+                    <div class="deck-card-body">
+                        <div class="deck-card-tags">
+                            <span class="deck-type-tag">{{typeLabel}}</span>
+                            <span class="deck-category-tag deck-category-tag-{{categoryKey}}">{{categoryLabel}}</span>
+                        </div>
+                        <h3>{{name}}</h3>
+                        <p>{{cardCount}} Cards</p>
+                        <div class="card-progress"><span style="width: {{mastery}}%"></span></div>
+                        <div class="deck-card-footer"><span></span><strong>{{mastery}}%</strong></div>
+                    </div>
+                </a>
             </article>
-
-            <article class="deck-card deck-card-blue">
-                <div class="deck-card-icon">⚗</div>
-                <div class="deck-card-body">
-                    <h3>Advanced Biology</h3>
-                    <p>240 Cards • Last studied 1h ago</p>
-                    <div class="card-progress"><span style="width: 22%"></span></div>
-                    <div class="deck-card-footer"><span></span><strong>22%</strong></div>
-                </div>
-            </article>
-
-            <article class="deck-card deck-card-lilac">
-                <div class="deck-card-icon">文A</div>
-                <div class="deck-card-body">
-                    <h3>French Phrases</h3>
-                    <p>88 Cards • Last studied 1w ago</p>
-                    <div class="card-progress"><span style="width: 64%"></span></div>
-                    <div class="deck-card-footer"><span></span><strong>64%</strong></div>
-                </div>
-            </article>
+            {{/myDecks}}
         </div>
     </section>
 
     <section class="dashboard-section dashboard-section-bottom">
         <div class="section-heading-row">
             <h2>Explore More</h2>
-            <a href="#" class="section-link">Explore Marketplace</a>
+            <a href="/explore" class="section-link">Explore Marketplace</a>
         </div>
 
         <div class="explore-grid">
-            <article class="explore-card explore-card-science">
-                <div class="explore-art explore-art-science"></div>
-                <div class="explore-card-body">
-                    <span class="tag tag-science">SCIENCE</span>
-                    <h3>Quantum Physics Basics</h3>
-                    <p>12.4k learners • ★ 4.9</p>
-                </div>
+            <div class="deck-empty {{discoverDecks.emptyClass}}">{{discoverDecks.empty}}</div>
+            {{#exploreDecks}}
+            <article class="deck-card explore-card">
+                <a class="deck-card-link" href="/explore/decks/{{id}}">
+                    <div class="deck-card-icon deck-card-icon-{{categoryKey}} {{backgroundClass}}" style="{{backgroundStyle}}">
+                        <span>{{initial}}</span>
+                    </div>
+                    <div class="deck-card-body">
+                        <div class="deck-card-tags">
+                            <span class="deck-type-tag">{{typeLabel}}</span>
+                            <span class="deck-category-tag deck-category-tag-{{categoryKey}}">{{categoryLabel}}</span>
+                        </div>
+                        <h3>{{name}}</h3>
+                        <p>{{description}}</p>
+                        <div class="explore-card-meta">
+                            <span>{{cardCount}} cards</span>
+                            <span>{{learnerCount}} learners</span>
+                            <span>★ {{rating}}</span>
+                        </div>
+                    </div>
+                </a>
             </article>
-
-            <article class="explore-card explore-card-language">
-                <div class="explore-art explore-art-language"></div>
-                <div class="explore-card-body">
-                    <span class="tag tag-language">LANGUAGE</span>
-                    <h3>Italian for Travelers</h3>
-                    <p>8.1k learners • ★ 4.7</p>
-                </div>
-            </article>
-
-            <article class="explore-card explore-card-philosophy">
-                <div class="explore-art explore-art-philosophy"></div>
-                <div class="explore-card-body">
-                    <span class="tag tag-philosophy">PHILOSOPHY</span>
-                    <h3>Stoicism Daily</h3>
-                    <p>5.2k learners • ★ 5.0</p>
-                </div>
-            </article>
+            {{/exploreDecks}}
         </div>
     </section>
 </main>
