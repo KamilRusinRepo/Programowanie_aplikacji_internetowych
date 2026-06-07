@@ -14,7 +14,7 @@ const togglePasswordVisibility = (event) => {
     // Swap icon if present
     const img = toggleButton.querySelector('.password-icon');
     if (img) {
-        img.src = field.type === 'password' ? '/icons/eye.svg' : '/icons/eye_off.svg';
+        img.src = field.type === 'password' ? '/icons/login/eye.svg' : '/icons/login/eye_off.svg';
         img.alt = field.type === 'password' ? 'Show password' : 'Hide password';
     }
 };
@@ -60,6 +60,78 @@ const renderAuthErrors = (form, errors) => {
     });
 };
 
+const setFieldError = (form, fieldName, message) => {
+    const errorNode = form.querySelector(`[data-field-error="${fieldName}"]`);
+    const input = form.querySelector(`[name="${fieldName}"]`);
+
+    if (errorNode) {
+        errorNode.textContent = message || '';
+    }
+
+    if (input) {
+        input.classList.toggle('input-invalid', Boolean(message));
+    }
+};
+
+let registerValidationTimer = null;
+
+const validateRegisterRealtime = (form) => {
+    const username = form.querySelector('[name="username"]')?.value.trim() || '';
+    const email = form.querySelector('[name="email"]')?.value.trim() || '';
+    const password = form.querySelector('[name="password"]')?.value || '';
+    const confirmation = form.querySelector('[name="password_confirmation"]')?.value || '';
+
+    if (password && confirmation) {
+        setFieldError(form, 'password_confirmation', password === confirmation ? '' : 'Passwords do not match.');
+    } else {
+        setFieldError(form, 'password_confirmation', '');
+    }
+
+    window.clearTimeout(registerValidationTimer);
+    registerValidationTimer = window.setTimeout(async () => {
+        if (!username && !email) {
+            setFieldError(form, 'username', '');
+            setFieldError(form, 'email', '');
+            return;
+        }
+
+        const params = new URLSearchParams({
+            username,
+            email,
+            password,
+            password_confirmation: confirmation,
+        });
+
+        const response = await fetch(`/register/validate?${params.toString()}`, {
+            headers: {
+                Accept: 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        });
+        const payload = await response.json().catch(() => ({ errors: {} }));
+        const errors = payload.errors || {};
+
+        setFieldError(form, 'username', errors.username || '');
+        setFieldError(form, 'email', errors.email || '');
+        if (password && confirmation) {
+            setFieldError(form, 'password_confirmation', errors.password_confirmation || '');
+        }
+    }, 250);
+};
+
+const handleAuthInput = (event) => {
+    const form = event.target.closest('[data-auth-form]');
+    if (!form || form.action.indexOf('/register') === -1) {
+        return;
+    }
+
+    if (!['username', 'email', 'password', 'password_confirmation'].includes(event.target.name)) {
+        return;
+    }
+
+    validateRegisterRealtime(form);
+};
+
 const handleAuthSubmit = async (event) => {
     const form = event.target.closest('[data-auth-form]');
 
@@ -91,43 +163,4 @@ const handleAuthSubmit = async (event) => {
 
 document.addEventListener('click', togglePasswordVisibility);
 document.addEventListener('submit', handleAuthSubmit);
-
-// Dashboard user popover: toggle logout button and close on outside click or Escape
-document.addEventListener('click', (e) => {
-    const toggle = e.target.closest('[data-user-toggle]');
-
-    if (toggle) {
-        const wrap = toggle.closest('.dashboard-sidebar-user-wrap');
-        if (!wrap) return;
-        wrap.classList.toggle('popover-open');
-        return;
-    }
-
-    // If clicked inside the popover, do nothing (allow button clicks)
-    if (e.target.closest('.dashboard-sidebar-user-wrap')) {
-        return;
-    }
-
-    // Clicked outside -> close any open popovers
-    document.querySelectorAll('.dashboard-sidebar-user-wrap.popover-open').forEach((w) => {
-        w.classList.remove('popover-open');
-    });
-});
-
-// Logout button navigation
-document.addEventListener('click', (e) => {
-    if (e.target.matches('.user-logout-btn')) {
-        e.preventDefault();
-        // Navigate to logout endpoint (server will redirect)
-        window.location.assign('/logout');
-    }
-});
-
-// Close popover on Escape
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' || e.key === 'Esc') {
-        document.querySelectorAll('.dashboard-sidebar-user-wrap.popover-open').forEach((w) => {
-            w.classList.remove('popover-open');
-        });
-    }
-});
+document.addEventListener('input', handleAuthInput);

@@ -1,0 +1,95 @@
+<main class="dashboard-main explore-main">
+    <section class="deck-list-hero">
+        <div>
+            <h1>Explore Marketplace</h1>
+            <p>Find public decks created by other learners.</p>
+        </div>
+    </section>
+
+    <form method="get" action="/explore" class="explore-filter-bar {{filters.formClass}}">
+        <label class="explore-search">
+            <span>Search</span>
+            <input type="search" name="q" placeholder="Search decks, subjects, or creators..." value="{{filters.q}}">
+        </label>
+        <label>
+            <span>Deck Type</span>
+            <select name="deck_type" data-explore-deck-type>
+                {{#filters.deckTypes}}
+                <option value="{{value}}" {{selected}}>{{label}}</option>
+                {{/filters.deckTypes}}
+            </select>
+        </label>
+        <label>
+            <span>Category</span>
+            <select name="category">
+                {{#filters.categories}}
+                <option value="{{value}}" {{selected}}>{{label}}</option>
+                {{/filters.categories}}
+            </select>
+        </label>
+        <label>
+            <span>Source Language</span>
+            <select name="source_language">
+                {{#filters.sourceLanguages}}
+                <option value="{{value}}" {{selected}}>{{label}}</option>
+                {{/filters.sourceLanguages}}
+            </select>
+        </label>
+        <label class="{{filters.targetClass}}" data-explore-target-language>
+            <span>Target Language</span>
+            <select name="target_language">
+                {{#filters.targetLanguages}}
+                <option value="{{value}}" {{selected}}>{{label}}</option>
+                {{/filters.targetLanguages}}
+            </select>
+        </label>
+        <label>
+            <span>Sort By</span>
+            <select name="sort">
+                {{#filters.sortOptions}}
+                <option value="{{value}}" {{selected}}>{{label}}</option>
+                {{/filters.sortOptions}}
+            </select>
+        </label>
+        <button type="submit">Search</button>
+    </form>
+
+    <section class="explore-section">
+        <div class="section-heading-row">
+            <h2>Trending Decks</h2>
+        </div>
+
+        <div class="explore-grid">
+            <div class="deck-empty {{explore.emptyClass}}">{{explore.empty}}</div>
+            {{#decks}}
+            <article class="deck-card explore-card">
+                <a class="deck-card-link" href="/explore/decks/{{id}}">
+                    <div class="deck-card-icon deck-card-icon-{{categoryKey}} {{backgroundClass}}" style="{{backgroundStyle}}">
+                        <span>{{initial}}</span>
+                    </div>
+                    <div class="deck-card-body">
+                        <div class="deck-card-tags">
+                            <span class="deck-type-tag">{{typeLabel}}</span>
+                            <span class="deck-category-tag deck-category-tag-{{categoryKey}}">{{categoryLabel}}</span>
+                        </div>
+                        <h3>{{name}}</h3>
+                        <p>{{description}}</p>
+                        <div class="explore-card-meta">
+                            <span>{{cardCount}} cards</span>
+                            <span>{{learnerCount}} learners</span>
+                            <span>★ {{rating}}</span>
+                        </div>
+                    </div>
+                </a>
+                <form method="post" action="{{followAction}}" class="explore-follow-form">
+                    <input type="hidden" name="return_to" value="{{explore.returnTo}}">
+                    <button type="submit" class="explore-follow-btn {{followClass}}" {{followDisabled}}>
+                        <span class="explore-icon explore-icon-follow {{followIconClass}}" aria-hidden="true"></span>
+                        <span>{{followLabel}}</span>
+                    </button>
+                </form>
+            </article>
+            {{/decks}}
+        </div>
+    </section>
+</main>

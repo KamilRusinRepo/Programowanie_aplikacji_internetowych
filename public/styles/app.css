@@ -28,6 +28,77 @@ body {
 a {
     color: inherit;
     text-decoration: none;
+    cursor: pointer;
+}
+
+button,
+summary,
+label:has(input[type="checkbox"]),
+label:has(input[type="radio"]),
+[role="button"],
+[data-user-toggle],
+[data-password-toggle],
+[data-open-password-modal],
+[data-close-password-modal],
+[data-add-user],
+[data-edit-user],
+[data-close-user-modal],
+[data-toggle-add-card],
+[data-cancel-add],
+[data-hint-btn],
+[data-skip-btn],
+[data-reset-session] {
+    cursor: pointer;
+}
+
+.settings-toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.settings-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.settings-toggle span {
+    position: absolute;
+    inset: 0;
+    background: #e2e8f0;
+    border-radius: 999px;
+    transition: background 0.2s ease;
+    cursor: pointer;
+}
+
+.settings-toggle span::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    background: #ffffff;
+    border-radius: 999px;
+    transition: transform 0.2s ease;
+}
+
+.settings-toggle input:checked + span {
+    background: #22c55e;
+}
+
+.settings-toggle input:checked + span::after {
+    transform: translateX(20px);
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled,
+[aria-disabled="true"] {
+    cursor: not-allowed;
 }
 
 .auth-page,
@@ -557,4 +628,16 @@ a {
     .auth-brand-panel h1 {
         font-size: 2rem;
     }
+}
+
+html.theme-dark .settings-toggle span {
+    background: #263241;
+}
+
+html.theme-dark .settings-toggle input:checked + span {
+    background: #22c55e;
+}
+
+html.theme-dark .settings-toggle span::after {
+    background: #e2e8f0;
 }

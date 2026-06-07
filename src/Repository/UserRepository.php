@@ -15,6 +15,7 @@ final class UserRepository
     public function __construct()
     {
         $this->connection = Database::connection();
+        $this->ensureSchema();
     }
 
     public function countAll(): int
@@ -25,7 +26,9 @@ final class UserRepository
     public function create(string $username, string $email, string $passwordHash): int
     {
         $statement = $this->connection->prepare(
-            'INSERT INTO users (username, email, password_hash) VALUES (:username, :email, :password_hash) RETURNING id'
+            'INSERT INTO users (username, email, password_hash, password_changed_at)
+             VALUES (:username, :email, :password_hash, NOW())
+             RETURNING id'
         );
         $statement->execute([
             'username' => $username,
@@ -50,7 +53,7 @@ final class UserRepository
     public function findByLogin(string $login): ?User
     {
         $statement = $this->connection->prepare(
-            'SELECT u.id, u.username, u.email, u.password_hash, u.is_enabled, u.created_at, r.name AS role_name
+            'SELECT u.id, u.username, u.email, u.password_hash, u.is_enabled, u.created_at, u.password_changed_at, r.name AS role_name
              FROM users u
              LEFT JOIN user_roles ur ON ur.user_id = u.id
              LEFT JOIN roles r ON r.id = ur.role_id
@@ -68,7 +71,7 @@ final class UserRepository
     public function findByEmail(string $email): ?User
     {
         $statement = $this->connection->prepare(
-            'SELECT u.id, u.username, u.email, u.password_hash, u.is_enabled, u.created_at, r.name AS role_name
+            'SELECT u.id, u.username, u.email, u.password_hash, u.is_enabled, u.created_at, u.password_changed_at, r.name AS role_name
              FROM users u
              LEFT JOIN user_roles ur ON ur.user_id = u.id
              LEFT JOIN roles r ON r.id = ur.role_id
@@ -85,7 +88,7 @@ final class UserRepository
     public function findByUsername(string $username): ?User
     {
         $statement = $this->connection->prepare(
-            'SELECT u.id, u.username, u.email, u.password_hash, u.is_enabled, u.created_at, r.name AS role_name
+            'SELECT u.id, u.username, u.email, u.password_hash, u.is_enabled, u.created_at, u.password_changed_at, r.name AS role_name
              FROM users u
              LEFT JOIN user_roles ur ON ur.user_id = u.id
              LEFT JOIN roles r ON r.id = ur.role_id
@@ -102,7 +105,7 @@ final class UserRepository
     public function findById(int $id): ?User
     {
         $statement = $this->connection->prepare(
-            'SELECT u.id, u.username, u.email, u.password_hash, u.is_enabled, u.created_at, r.name AS role_name
+            'SELECT u.id, u.username, u.email, u.password_hash, u.is_enabled, u.created_at, u.password_changed_at, r.name AS role_name
              FROM users u
              LEFT JOIN user_roles ur ON ur.user_id = u.id
              LEFT JOIN roles r ON r.id = ur.role_id
@@ -206,7 +209,12 @@ final class UserRepository
         }
 
         $statement = $this->connection->prepare(
-            'UPDATE users SET username = :username, email = :email, password_hash = :password_hash WHERE id = :id'
+            'UPDATE users
+             SET username = :username,
+                 email = :email,
+                 password_hash = :password_hash,
+                 password_changed_at = NOW()
+             WHERE id = :id'
         );
         $statement->execute([
             'username' => $username,
@@ -234,5 +242,19 @@ final class UserRepository
 
         $this->connection->prepare('DELETE FROM user_roles WHERE user_id = :user_id')->execute(['user_id' => $userId]);
         $this->assignRole($userId, $roleId);
+    }
+
+    private function ensureSchema(): void
+    {
+        $this->connection->exec(
+            'ALTER TABLE users
+             ADD COLUMN IF NOT EXISTS password_changed_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP'
+        );
+
+        $this->connection->exec(
+            'UPDATE users
+             SET password_changed_at = COALESCE(password_changed_at, created_at, CURRENT_TIMESTAMP)
+             WHERE password_changed_at IS NULL'
+        );
     }
 }
