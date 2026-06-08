@@ -11,6 +11,11 @@ use FlashMind\Service\AuthService;
 
 final class AuthController extends BaseController
 {
+    private const MAX_EMAIL_LENGTH = 255;
+    private const MAX_PASSWORD_LENGTH = 255;
+    private const MIN_USERNAME_LENGTH = 3;
+    private const MAX_USERNAME_LENGTH = 50;
+
     public function __construct(
         private readonly AuthService $authService,
         private readonly DeckRepository $decks,
@@ -180,12 +185,26 @@ final class AuthController extends BaseController
         $passwordConfirmation = (string) $request->input('password_confirmation', '');
         $errors = [];
 
-        if ($username !== '' && $this->authService->usernameExists($username)) {
+        if ($username !== '' && (mb_strlen($username) < self::MIN_USERNAME_LENGTH || mb_strlen($username) > self::MAX_USERNAME_LENGTH)) {
+            $errors['username'] = 'Username must be between 3 and 50 characters.';
+        } elseif ($username !== '' && $this->authService->usernameExists($username)) {
             $errors['username'] = 'Username is already taken.';
         }
 
-        if ($email !== '' && $this->authService->emailExists($email)) {
+        if ($email !== '' && mb_strlen($email) > self::MAX_EMAIL_LENGTH) {
+            $errors['email'] = 'Email must have at most 255 characters.';
+        } elseif ($email !== '' && $this->authService->emailExists($email)) {
             $errors['email'] = 'Email is already taken.';
+        }
+
+        if ($password !== '' && mb_strlen($password) > self::MAX_PASSWORD_LENGTH) {
+            $errors['password'] = 'Password must have at most 255 characters.';
+        } elseif ($password !== '' && !$this->isStrongPassword($password)) {
+            $errors['password'] = 'Password must contain a lowercase letter, uppercase letter, number, and special character.';
+        }
+
+        if ($passwordConfirmation !== '' && mb_strlen($passwordConfirmation) > self::MAX_PASSWORD_LENGTH) {
+            $errors['password_confirmation'] = 'Password confirmation must have at most 255 characters.';
         }
 
         if ($password !== '' && $passwordConfirmation !== '' && $password !== $passwordConfirmation) {
@@ -196,6 +215,14 @@ final class AuthController extends BaseController
             'success' => $errors === [],
             'errors' => $errors,
         ], $errors === [] ? 200 : 422);
+    }
+
+    private function isStrongPassword(string $password): bool
+    {
+        return preg_match('/[a-z]/', $password) === 1
+            && preg_match('/[A-Z]/', $password) === 1
+            && preg_match('/\d/', $password) === 1
+            && preg_match('/[^a-zA-Z\d]/', $password) === 1;
     }
 
     public function guest(Request $request): void

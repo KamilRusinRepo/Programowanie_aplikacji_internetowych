@@ -9,6 +9,13 @@ use FlashMind\Repository\UserRepository;
 
 final class AuthService
 {
+    private const MAX_LOGIN_LENGTH = 255;
+    private const MAX_EMAIL_LENGTH = 255;
+    private const MAX_PASSWORD_LENGTH = 255;
+    private const MIN_PASSWORD_LENGTH = 8;
+    private const MIN_USERNAME_LENGTH = 3;
+    private const MAX_USERNAME_LENGTH = 50;
+
     public function __construct(
         private readonly UserRepository $users,
         private readonly RoleRepository $roles,
@@ -25,20 +32,30 @@ final class AuthService
 
         if ($username === '') {
             $errors['username'] = 'Username is required.';
-        } elseif (mb_strlen($username) < 3 || mb_strlen($username) > 50) {
+        } elseif (mb_strlen($username) < self::MIN_USERNAME_LENGTH || mb_strlen($username) > self::MAX_USERNAME_LENGTH) {
             $errors['username'] = 'Username must be between 3 and 50 characters.';
         }
 
         if ($email === '') {
             $errors['email'] = 'Email is required.';
+        } elseif (mb_strlen($email) > self::MAX_EMAIL_LENGTH) {
+            $errors['email'] = 'Email must have at most 255 characters.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = 'Email is not valid.';
         }
 
         if ($password === '') {
             $errors['password'] = 'Password is required.';
-        } elseif (mb_strlen($password) < 8) {
+        } elseif (mb_strlen($password) < self::MIN_PASSWORD_LENGTH) {
             $errors['password'] = 'Password must have at least 8 characters.';
+        } elseif (mb_strlen($password) > self::MAX_PASSWORD_LENGTH) {
+            $errors['password'] = 'Password must have at most 255 characters.';
+        } elseif (!$this->isStrongPassword($password)) {
+            $errors['password'] = 'Password must contain a lowercase letter, uppercase letter, number, and special character.';
+        }
+
+        if (mb_strlen($passwordConfirmation) > self::MAX_PASSWORD_LENGTH) {
+            $errors['password_confirmation'] = 'Password confirmation must have at most 255 characters.';
         }
 
         if ($password !== $passwordConfirmation) {
@@ -83,6 +100,14 @@ final class AuthService
         ];
     }
 
+    private function isStrongPassword(string $password): bool
+    {
+        return preg_match('/[a-z]/', $password) === 1
+            && preg_match('/[A-Z]/', $password) === 1
+            && preg_match('/\d/', $password) === 1
+            && preg_match('/[^a-zA-Z\d]/', $password) === 1;
+    }
+
     public function login(array $input): array
     {
         $login = trim((string) ($input['login'] ?? ''));
@@ -91,10 +116,14 @@ final class AuthService
 
         if ($login === '') {
             $errors['login'] = 'Email or username is required.';
+        } elseif (mb_strlen($login) > self::MAX_LOGIN_LENGTH) {
+            $errors['login'] = 'Email or username must have at most 255 characters.';
         }
 
         if ($password === '') {
             $errors['password'] = 'Password is required.';
+        } elseif (mb_strlen($password) > self::MAX_PASSWORD_LENGTH) {
+            $errors['password'] = 'Password must have at most 255 characters.';
         }
 
         if ($errors !== []) {

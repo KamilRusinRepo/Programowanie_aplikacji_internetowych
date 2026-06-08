@@ -75,6 +75,13 @@ syncLanguageButton();
         }
     };
 
+    const isStrongPassword = (password) => (
+        /[a-z]/.test(password)
+        && /[A-Z]/.test(password)
+        && /\d/.test(password)
+        && /[^a-zA-Z\d]/.test(password)
+    );
+
     const validatePasswordMatch = () => {
         if (!passwordInput || !passwordConfirmationInput) return true;
 
@@ -83,6 +90,8 @@ syncLanguageButton();
 
         if (password !== '' && password.length < 8) {
             setPasswordError('password', 'Hasło musi mieć co najmniej 8 znaków.');
+        } else if (password !== '' && !isStrongPassword(password)) {
+            setPasswordError('password', 'Hasło musi zawierać małą literę, dużą literę, cyfrę i znak specjalny.');
         } else {
             setPasswordError('password', '');
         }

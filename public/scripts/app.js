@@ -113,6 +113,7 @@ const validateRegisterRealtime = (form) => {
 
         setFieldError(form, 'username', errors.username || '');
         setFieldError(form, 'email', errors.email || '');
+        setFieldError(form, 'password', errors.password || '');
         if (password && confirmation) {
             setFieldError(form, 'password_confirmation', errors.password_confirmation || '');
         }
