@@ -68,7 +68,7 @@ final class ExploreController extends BaseController
             ],
             'decks' => $this->prepareMarketplaceDecks($decks, (int) $user['id'], $isGuest),
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=19"><link rel="stylesheet" href="/styles/explore.css?v=15">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21"><link rel="stylesheet" href="/styles/explore.css?v=17">',
                 'extraJs' => '<script defer src="/scripts/explore-filters.js?v=2"></script>',
             ],
         ], 'layout/dashboard');
@@ -124,7 +124,7 @@ final class ExploreController extends BaseController
                 'ratings' => $this->ratingOptions(),
             ]] : [],
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=19"><link rel="stylesheet" href="/styles/explore.css?v=15">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21"><link rel="stylesheet" href="/styles/explore.css?v=17">',
             ],
         ], 'layout/dashboard');
     }
@@ -247,6 +247,7 @@ final class ExploreController extends BaseController
             'id' => (int) $deck['id'],
             'name' => $name,
             'description' => (string) ($deck['description'] ?? ''),
+            'author' => (string) ($deck['owner_username'] ?? 'Unknown author'),
             'initial' => strtoupper(substr($name, 0, 1)),
             'typeLabel' => $deckType === 'language' ? 'Language' : 'General',
             'categoryLabel' => $category !== '' ? $category : 'Uncategorized',
@@ -263,6 +264,9 @@ final class ExploreController extends BaseController
             'followDisabled' => $isOwner ? 'disabled' : '',
             'followClass' => $isOwner ? 'is-following' : ($isFollowing ? 'is-unfollow' : ''),
             'followIconClass' => $isOwner ? 'is-hidden' : '',
+            'studyActions' => (!$isGuest && ($isOwner || $isFollowing)) ? [[
+                'url' => '/decks/' . (int) $deck['id'] . '/study',
+            ]] : [],
         ];
     }
 

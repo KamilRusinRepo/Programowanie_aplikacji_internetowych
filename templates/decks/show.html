@@ -15,7 +15,10 @@
             <a href="/decks/{{deck.id}}/export" class="deck-outline-btn">Export</a>
             <button type="button" class="deck-outline-btn" data-toggle-add-card>Add Card</button>
             <a href="/decks/{{deck.id}}/study" class="deck-primary-btn">Start Study</a>
-            <form method="post" action="/decks/{{deck.id}}/delete" class="deck-delete-form" data-confirm-delete>
+            <form method="post" action="/decks/{{deck.id}}/delete" class="deck-delete-form"
+                data-confirm-message="Are you sure you want to delete this deck? This cannot be undone."
+                data-confirm-title="Delete deck"
+                data-confirm-action="Delete">
                 <button type="submit" class="deck-danger-btn">Delete Deck</button>
             </form>
         </div>
@@ -94,7 +97,10 @@
                     data-card-translated="{{translated}}">
                     <img src="/icons/deck/edit_button.svg" alt="Edit">
                 </button>
-                <form method="post" action="/decks/{{deck.id}}/cards/{{id}}/delete" class="inline-form" data-confirm-card-delete>
+                <form method="post" action="/decks/{{deck.id}}/cards/{{id}}/delete" class="inline-form"
+                    data-confirm-message="Are you sure you want to delete this card?"
+                    data-confirm-title="Delete card"
+                    data-confirm-action="Delete">
                     <button type="submit" class="card-icon-btn danger" title="Delete" aria-label="Delete">
                         <img src="/icons/deck/delete_button.svg" alt="Delete">
                     </button>

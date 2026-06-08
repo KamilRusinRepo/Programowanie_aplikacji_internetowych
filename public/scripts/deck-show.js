@@ -1,8 +1,6 @@
 const toggleAddButtons = document.querySelectorAll('[data-toggle-add-card]');
     const addForm = document.querySelector('[data-add-card-form]');
     const cancelAdd = document.querySelector('[data-cancel-add]');
-    const deleteForm = document.querySelector('[data-confirm-delete]');
-    const cardDeleteForms = document.querySelectorAll('[data-confirm-card-delete]');
     const editButtons = document.querySelectorAll('.card-icon-btn[title="Edit"]');
     const cardForm = document.querySelector('.deck-card-form');
     const cardFormTitle = document.querySelector('[data-card-form-title]');
@@ -51,23 +49,5 @@ const toggleAddButtons = document.querySelectorAll('[data-toggle-add-card]');
 
             addForm.hidden = false;
             addForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-    });
-
-    if (deleteForm) {
-        deleteForm.addEventListener('submit', (event) => {
-            const ok = window.confirm('Are you sure you want to delete this deck? This cannot be undone.');
-            if (!ok) {
-                event.preventDefault();
-            }
-        });
-    }
-
-    cardDeleteForms.forEach((form) => {
-        form.addEventListener('submit', (event) => {
-            const ok = window.confirm('Delete this card?');
-            if (!ok) {
-                event.preventDefault();
-            }
         });
     });

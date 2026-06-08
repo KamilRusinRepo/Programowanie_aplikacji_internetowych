@@ -136,7 +136,16 @@ final class LearningRepository
              FROM cards c
              INNER JOIN decks d ON d.id = c.deck_id
              LEFT JOIN card_progress cp ON cp.card_id = c.id AND cp.user_id = :user_id
-             WHERE d.user_id = :user_id
+             WHERE (
+                    d.user_id = :user_id
+                    OR (
+                        d.is_public = true
+                        AND EXISTS (
+                        SELECT 1 FROM deck_follows followed
+                        WHERE followed.deck_id = d.id AND followed.user_id = :user_id
+                        )
+                    )
+               )
                AND (cp.next_review_at IS NULL OR cp.next_review_at <= NOW())',
             ['user_id' => $userId]
         );
@@ -170,13 +179,54 @@ final class LearningRepository
                         SELECT MAX(ss.created_at)
                         FROM study_sessions ss
                         WHERE ss.deck_id = d.id AND ss.user_id = :user_id
-                    ) AS last_activity
+                    ) AS last_activity,
+                    false AS is_followed
              FROM decks d
              LEFT JOIN cards c ON c.deck_id = d.id
              LEFT JOIN card_progress cp ON cp.card_id = c.id AND cp.user_id = :user_id
              WHERE d.user_id = :user_id
              GROUP BY d.id
              ORDER BY d.created_at DESC'
+        );
+        $statement->execute(['user_id' => $userId]);
+
+        return $statement->fetchAll();
+    }
+
+    public function studyableDeckStatistics(int $userId): array
+    {
+        $statement = $this->connection->prepare(
+            'SELECT d.id, d.name, d.description, d.deck_type, d.source_language, d.target_language, d.category, d.background_url, d.created_at,
+                    COUNT(c.id) AS card_count,
+                    COALESCE(ROUND(AVG(COALESCE(cp.mastery_level, 0)) / 4 * 100), 0) AS mastery,
+                    COUNT(cp.id) FILTER (WHERE COALESCE(cp.mastery_level, 0) >= 4) AS mastered_count,
+                    COALESCE(SUM(COALESCE(cp.correct_count, 0)), 0) AS correct_count,
+                    COALESCE(SUM(COALESCE(cp.wrong_count, 0)), 0) AS wrong_count,
+                    (
+                        SELECT MAX(ss.created_at)
+                        FROM study_sessions ss
+                        WHERE ss.deck_id = d.id AND ss.user_id = :user_id
+                    ) AS last_activity,
+                    (
+                        d.user_id <> :user_id
+                        AND EXISTS (
+                            SELECT 1 FROM deck_follows mine
+                            WHERE mine.deck_id = d.id AND mine.user_id = :user_id
+                        )
+                    ) AS is_followed
+             FROM decks d
+             LEFT JOIN cards c ON c.deck_id = d.id
+             LEFT JOIN card_progress cp ON cp.card_id = c.id AND cp.user_id = :user_id
+             WHERE d.user_id = :user_id
+                OR (
+                    d.is_public = true
+                    AND EXISTS (
+                    SELECT 1 FROM deck_follows followed
+                    WHERE followed.deck_id = d.id AND followed.user_id = :user_id
+                    )
+                )
+             GROUP BY d.id
+             ORDER BY last_activity DESC NULLS LAST, d.created_at DESC'
         );
         $statement->execute(['user_id' => $userId]);
 
@@ -215,7 +265,17 @@ final class LearningRepository
              FROM cards c
              INNER JOIN decks d ON d.id = c.deck_id
              LEFT JOIN card_progress cp ON cp.card_id = c.id AND cp.user_id = :user_id
-             WHERE c.deck_id = :deck_id AND d.user_id = :user_id
+             WHERE c.deck_id = :deck_id
+               AND (
+                    d.user_id = :user_id
+                    OR (
+                        d.is_public = true
+                        AND EXISTS (
+                        SELECT 1 FROM deck_follows followed
+                        WHERE followed.deck_id = d.id AND followed.user_id = :user_id
+                        )
+                    )
+               )
              ORDER BY COALESCE(cp.mastery_level, 0) ASC, c.created_at DESC'
         );
         $statement->execute([
@@ -377,7 +437,6 @@ final class LearningRepository
              INNER JOIN cards c ON c.id = cp.card_id
              INNER JOIN decks d ON d.id = c.deck_id
              WHERE cp.user_id = :user_id
-               AND d.user_id = :user_id
                AND COALESCE(cp.mastery_level, 0) >= 4
                AND ' . $masteredCondition
         );

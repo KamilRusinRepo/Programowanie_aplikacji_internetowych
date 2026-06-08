@@ -189,7 +189,7 @@ final class AdminController extends BaseController
             ],
             'raw' => [
                 'extraCss' => '<link rel="stylesheet" href="/styles/admin.css?v=4">',
-                'extraJs' => '<script defer src="/scripts/admin.js?v=1"></script>',
+                'extraJs' => '<script defer src="/scripts/admin.js?v=2"></script>',
             ],
             'users' => $users,
         ], 'layout/dashboard');
