@@ -29,11 +29,32 @@ final class AuthController extends BaseController
             'title' => 'Login',
             'errors' => [],
             'old' => [],
+            'csrfToken' => $this->csrfToken(),
         ]);
     }
 
     public function login(Request $request): void
     {
+        if (!$this->isValidCsrfToken((string) ($request->post['csrf_token'] ?? ''))) {
+            $errors = ['general' => 'Security token is invalid. Please try again.'];
+
+            if ($request->expectsJson()) {
+                $this->json([
+                    'success' => false,
+                    'errors' => $errors,
+                ], 419);
+            }
+
+            $this->render('auth/login', [
+                'title' => 'Login',
+                'errors' => $errors,
+                'old' => $request->post,
+                'csrfToken' => $this->csrfToken(),
+            ]);
+
+            return;
+        }
+
         $result = $this->authService->login($request->post);
 
         if (!$result['success']) {
@@ -48,6 +69,7 @@ final class AuthController extends BaseController
                 'title' => 'Login',
                 'errors' => $result['errors'],
                 'old' => $request->post,
+                'csrfToken' => $this->csrfToken(),
             ]);
 
             return;
@@ -82,11 +104,32 @@ final class AuthController extends BaseController
             'title' => 'Register',
             'errors' => [],
             'old' => [],
+            'csrfToken' => $this->csrfToken(),
         ]);
     }
 
     public function register(Request $request): void
     {
+        if (!$this->isValidCsrfToken((string) ($request->post['csrf_token'] ?? ''))) {
+            $errors = ['general' => 'Security token is invalid. Please try again.'];
+
+            if ($request->expectsJson()) {
+                $this->json([
+                    'success' => false,
+                    'errors' => $errors,
+                ], 419);
+            }
+
+            $this->render('auth/register', [
+                'title' => 'Register',
+                'errors' => $errors,
+                'old' => $request->post,
+                'csrfToken' => $this->csrfToken(),
+            ]);
+
+            return;
+        }
+
         $guestDecks = $_SESSION['guest_decks'] ?? [];
         $guestFollows = $_SESSION['guest_followed_decks'] ?? [];
         $result = $this->authService->register($request->post);
@@ -103,6 +146,7 @@ final class AuthController extends BaseController
                 'title' => 'Register',
                 'errors' => $result['errors'],
                 'old' => $request->post,
+                'csrfToken' => $this->csrfToken(),
             ]);
 
             return;
