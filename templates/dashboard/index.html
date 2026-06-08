@@ -57,8 +57,11 @@
             <div class="deck-empty {{dashboardDecks.emptyClass}}">{{dashboardDecks.empty}}</div>
             {{#myDecks}}
             <article class="deck-card">
-                <a class="deck-card-link" href="/decks/{{id}}">
+                <a class="deck-card-link" href="{{url}}">
                     <div class="deck-card-icon deck-card-icon-{{categoryKey}} {{backgroundClass}}" style="{{backgroundStyle}}">
+                        {{#followedBadges}}
+                        <span class="deck-image-badge">{{label}}</span>
+                        {{/followedBadges}}
                         <span>{{initial}}</span>
                     </div>
                     <div class="deck-card-body">

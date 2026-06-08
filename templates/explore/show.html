@@ -10,6 +10,7 @@
             </div>
             <h1>{{deck.name}}</h1>
             <p>{{deck.description}}</p>
+            <div class="explore-deck-author">Created by <strong>{{deck.author}}</strong></div>
             <div class="explore-card-meta">
                 <span>{{deck.badge}}</span>
                 <span>{{deck.cardCount}} cards</span>
@@ -17,13 +18,18 @@
                 <span>★ {{deck.rating}}</span>
             </div>
         </div>
-        <form method="post" action="{{deck.followAction}}" class="explore-follow-form">
-            <input type="hidden" name="return_to" value="/explore/decks/{{deck.id}}">
-            <button type="submit" class="explore-follow-btn {{deck.followClass}}" {{deck.followDisabled}}>
-                <span class="explore-icon explore-icon-follow {{deck.followIconClass}}" aria-hidden="true"></span>
-                <span>{{deck.followLabel}}</span>
-            </button>
-        </form>
+        <div class="explore-deck-actions">
+            {{#deck.studyActions}}
+            <a href="{{url}}" class="deck-primary-btn">Start Study</a>
+            {{/deck.studyActions}}
+            <form method="post" action="{{deck.followAction}}" class="explore-follow-form">
+                <input type="hidden" name="return_to" value="/explore/decks/{{deck.id}}">
+                <button type="submit" class="explore-follow-btn {{deck.followClass}}" {{deck.followDisabled}}>
+                    <span class="explore-icon explore-icon-follow {{deck.followIconClass}}" aria-hidden="true"></span>
+                    <span>{{deck.followLabel}}</span>
+                </button>
+            </form>
+        </div>
     </section>
 
     <nav class="explore-tabs">

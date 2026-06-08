@@ -46,7 +46,7 @@ final class DeckController extends BaseController
             'form' => $this->deckFormMeta('create'),
             'old' => $this->prepareDeckFormValues([]),
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=19">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
                 'extraJs' => '<script defer src="/scripts/deck-create.js?v=2"></script>',
             ],
         ], 'layout/dashboard');
@@ -84,7 +84,7 @@ final class DeckController extends BaseController
                 'form' => $this->deckFormMeta('edit', $deckId),
                 'old' => $this->prepareDeckFormValues($deck),
                 'raw' => [
-                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=19">',
+                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
                     'extraJs' => '<script defer src="/scripts/deck-create.js?v=2"></script>',
                 ],
             ], 'layout/dashboard');
@@ -116,7 +116,7 @@ final class DeckController extends BaseController
             'form' => $this->deckFormMeta('edit', $deckId),
             'old' => $this->prepareDeckFormValues($deck),
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=19">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
                 'extraJs' => '<script defer src="/scripts/deck-create.js?v=2"></script>',
             ],
         ], 'layout/dashboard');
@@ -163,8 +163,8 @@ final class DeckController extends BaseController
                 'emptyClass' => $deckCards === [] ? '' : 'is-hidden',
             ],
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=19">',
-                'extraJs' => '<script defer src="/scripts/deck-show.js?v=1"></script>',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
+                'extraJs' => '<script defer src="/scripts/deck-show.js?v=2"></script>',
             ],
             'decks' => $deckCards,
             'followingDecks' => [
@@ -210,8 +210,8 @@ final class DeckController extends BaseController
                 'publicReviews' => [],
                 'reviews' => [],
                 'raw' => [
-                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=19">',
-                    'extraJs' => '<script defer src="/scripts/deck-show.js?v=1"></script>',
+                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
+                    'extraJs' => '<script defer src="/scripts/deck-show.js?v=2"></script>',
                 ],
                 'cards' => $cardRows,
             ], 'layout/dashboard');
@@ -274,8 +274,8 @@ final class DeckController extends BaseController
             ]] : [],
             'reviews' => $this->prepareDeckReviews($reviews),
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=19">',
-                'extraJs' => '<script defer src="/scripts/deck-show.js?v=1"></script>',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
+                'extraJs' => '<script defer src="/scripts/deck-show.js?v=2"></script>',
             ],
             'cards' => $cardRows,
         ], 'layout/dashboard');
@@ -301,7 +301,7 @@ final class DeckController extends BaseController
             return;
         }
 
-        $deck = $this->decks->findByIdForUser($deckId, (int) $user['id']);
+        $deck = $this->decks->findStudyableById($deckId, (int) $user['id']);
         if ($deck === null) {
             $this->redirect('/decks');
         }
@@ -376,7 +376,7 @@ final class DeckController extends BaseController
             $this->json(['success' => true, 'redirect' => '/decks/' . $deckId . '/study/summary/' . $sessionId]);
         }
 
-        $deck = $this->decks->findByIdForUser($deckId, (int) $user['id']);
+        $deck = $this->decks->findStudyableById($deckId, (int) $user['id']);
         if ($deck === null) {
             $this->json(['success' => false, 'message' => 'Deck not found'], 404);
         }
@@ -597,7 +597,7 @@ final class DeckController extends BaseController
                 'form' => $this->deckFormMeta('create'),
                 'old' => $this->prepareDeckFormValues($data),
                 'raw' => [
-                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=19">',
+                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
                     'extraJs' => '<script defer src="/scripts/deck-create.js?v=2"></script>',
                 ],
             ], 'layout/dashboard');
@@ -619,11 +619,11 @@ final class DeckController extends BaseController
             $this->json([
                 'success' => true,
                 'deckId' => $deckId,
-                'redirect' => '/dashboard',
+                'redirect' => '/decks/' . $deckId,
             ]);
         }
 
-        $this->redirect('/dashboard');
+        $this->redirect('/decks/' . $deckId);
     }
 
     public function update(Request $request, string $deckId): void
@@ -655,7 +655,7 @@ final class DeckController extends BaseController
                     'form' => $this->deckFormMeta('edit', $deckId),
                     'old' => $this->prepareDeckFormValues($data),
                     'raw' => [
-                        'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=19">',
+                        'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
                         'extraJs' => '<script defer src="/scripts/deck-create.js?v=2"></script>',
                     ],
                 ], 'layout/dashboard');
@@ -689,7 +689,7 @@ final class DeckController extends BaseController
                 'form' => $this->deckFormMeta('edit', $deckId),
                 'old' => $this->prepareDeckFormValues($data),
                 'raw' => [
-                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=19">',
+                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
                     'extraJs' => '<script defer src="/scripts/deck-create.js?v=2"></script>',
                 ],
             ], 'layout/dashboard');
@@ -1135,6 +1135,7 @@ final class DeckController extends BaseController
             return [
                 'id' => (int) $deck['id'],
                 'url' => $publicLinks ? '/explore/decks/' . (int) $deck['id'] : '/decks/' . (int) $deck['id'],
+                'studyUrl' => '/decks/' . (int) $deck['id'] . '/study',
                 'unfollowAction' => '/explore/decks/' . (int) $deck['id'] . '/unfollow',
                 'name' => $name,
                 'badge' => $badge,

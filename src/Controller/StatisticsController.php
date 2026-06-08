@@ -28,7 +28,7 @@ final class StatisticsController extends BaseController
         }
 
         $profile = $this->profileData((int) $user['id'], $user);
-        $decks = $this->learning->deckStatistics((int) $user['id']);
+        $decks = $this->learning->studyableDeckStatistics((int) $user['id']);
         $overview = $this->learning->statisticsOverview((int) $user['id']);
         $heatmap = $overview['activityHeatmap'];
 
@@ -79,7 +79,7 @@ final class StatisticsController extends BaseController
         }
 
         $profile = $this->profileData((int) $user['id'], $user);
-        $decks = $this->learning->deckStatistics((int) $user['id']);
+        $decks = $this->learning->studyableDeckStatistics((int) $user['id']);
 
         $this->render('statistics/decks', [
             'title' => 'Statistics',
@@ -107,7 +107,7 @@ final class StatisticsController extends BaseController
         }
 
         $deckId = (int) $deckId;
-        $deck = $this->decks->findByIdForUser($deckId, (int) $user['id']);
+        $deck = $this->decks->findStudyableById($deckId, (int) $user['id']);
         if ($deck === null) {
             $this->redirect('/statistics');
         }

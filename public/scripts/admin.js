@@ -114,14 +114,6 @@
         }
     });
 
-    document.querySelectorAll('[data-confirm-user-delete]').forEach((form) => {
-        form.addEventListener('submit', (event) => {
-            if (!window.confirm('Delete this user?')) {
-                event.preventDefault();
-            }
-        });
-    });
-
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
             closeUserModal();

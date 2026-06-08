@@ -53,10 +53,13 @@
                         <div class="deck-card-footer"><span>Community</span><strong>★ {{rating}}</strong></div>
                     </div>
                 </a>
-                <form method="post" action="{{unfollowAction}}" class="deck-follow-actions">
-                    <input type="hidden" name="return_to" value="/decks">
-                    <button type="submit" class="deck-outline-btn">Unfollow</button>
-                </form>
+                <div class="deck-follow-actions">
+                    <a href="{{studyUrl}}" class="deck-primary-btn">Start Study</a>
+                    <form method="post" action="{{unfollowAction}}">
+                        <input type="hidden" name="return_to" value="/decks">
+                        <button type="submit" class="deck-outline-btn">Unfollow</button>
+                    </form>
+                </div>
             </article>
             {{/followedDecks}}
         </div>

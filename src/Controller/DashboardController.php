@@ -32,7 +32,7 @@ final class DashboardController extends BaseController
         $isGuest = $this->isGuestUser($user);
         $learningStats = $this->learning->dashboardStats((int) $user['id']);
         $continueDecks = $isGuest ? $this->guestContinueDecks() : $this->decks->findContinueLearning((int) $user['id']);
-        $myDecks = $isGuest ? $this->guestDecks() : $this->learning->deckStatistics((int) $user['id']);
+        $myDecks = $isGuest ? $this->guestDecks() : $this->learning->studyableDeckStatistics((int) $user['id']);
         $discoverDecks = $this->decks->publicDecks((int) $user['id'], '', '', '', 'followers', '', '', !$isGuest, $isGuest ? 0 : 3);
         if ($isGuest) {
             $followed = is_array($_SESSION['guest_followed_decks'] ?? null) ? array_map('intval', $_SESSION['guest_followed_decks']) : [];
@@ -79,7 +79,7 @@ final class DashboardController extends BaseController
             ],
             'exploreDecks' => $this->prepareExploreDecks($discoverDecks),
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=19"><link rel="stylesheet" href="/styles/explore.css?v=15">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21"><link rel="stylesheet" href="/styles/explore.css?v=17">',
             ],
         ], 'layout/dashboard');
     }
@@ -151,9 +151,12 @@ final class DashboardController extends BaseController
             $deckType = (string) ($deck['deck_type'] ?? 'general');
             $backgroundUrl = (string) ($deck['background_url'] ?? '');
             $categoryKey = strtolower(preg_replace('/\s+/', '-', $category !== '' ? $category : 'general'));
+            $isFollowed = in_array((string) ($deck['is_followed'] ?? ''), ['1', 't', 'true'], true)
+                || ($deck['is_followed'] ?? false) === true;
 
             return [
                 'id' => (int) $deck['id'],
+                'url' => $isFollowed ? '/explore/decks/' . (int) $deck['id'] : '/decks/' . (int) $deck['id'],
                 'name' => $name,
                 'initial' => strtoupper(substr($name, 0, 1)),
                 'typeLabel' => $deckType === 'language' ? 'Language' : 'General',
@@ -161,6 +164,7 @@ final class DashboardController extends BaseController
                 'categoryKey' => $categoryKey,
                 'backgroundClass' => $backgroundUrl !== '' ? 'has-background' : '',
                 'backgroundStyle' => $backgroundUrl !== '' ? 'background-image: url(' . $backgroundUrl . ');' : '',
+                'followedBadges' => $isFollowed ? [['label' => 'Followed']] : [],
                 'cardCount' => (int) $deck['card_count'],
                 'mastery' => (int) $deck['mastery'],
             ];

@@ -72,7 +72,10 @@
                                     <img src="/icons/admin_panel/{{toggleIcon}}" alt="">
                                 </button>
                             </form>
-                            <form method="post" action="/admin/users/{{id}}/delete" data-confirm-user-delete>
+                            <form method="post" action="/admin/users/{{id}}/delete"
+                                data-confirm-message="Are you sure you want to delete this user?"
+                                data-confirm-title="Delete user"
+                                data-confirm-action="Delete">
                                 <button type="submit" class="admin-icon-action" title="Delete user" aria-label="Delete user">
                                     <img src="/icons/admin_panel/delete.svg" alt="">
                                 </button>

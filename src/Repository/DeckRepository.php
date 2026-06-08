@@ -61,6 +61,13 @@ final class DeckRepository
              INNER JOIN cards c ON c.deck_id = d.id
              LEFT JOIN card_progress cp ON cp.card_id = c.id AND cp.user_id = :user_id
              WHERE d.user_id = :user_id
+                OR (
+                    d.is_public = true
+                    AND EXISTS (
+                        SELECT 1 FROM deck_follows followed
+                        WHERE followed.deck_id = d.id AND followed.user_id = :user_id
+                    )
+                )
              GROUP BY d.id
              ORDER BY due_cards DESC, d.created_at DESC
              LIMIT 2'
@@ -122,16 +129,18 @@ final class DeckRepository
                     COUNT(DISTINCT df.id) AS learner_count,
                     COALESCE(ROUND(AVG(dr.rating), 1), 0) AS average_rating,
                     COUNT(DISTINCT dr.id) AS review_count,
+                    u.username AS owner_username,
                     EXISTS (
                         SELECT 1 FROM deck_follows mine
                         WHERE mine.deck_id = d.id AND mine.user_id = :user_id
                     ) AS is_following
              FROM decks d
+             INNER JOIN users u ON u.id = d.user_id
              LEFT JOIN cards c ON c.deck_id = d.id
              LEFT JOIN deck_follows df ON df.deck_id = d.id
              LEFT JOIN deck_reviews dr ON dr.deck_id = d.id
              WHERE ' . implode(' AND ', $conditions) . '
-             GROUP BY d.id
+             GROUP BY d.id, u.username
              ORDER BY ' . $orderBy
             . ($limit > 0 ? ' LIMIT ' . $limit : '')
         );
@@ -148,15 +157,17 @@ final class DeckRepository
                     COUNT(DISTINCT df_all.id) AS learner_count,
                     COALESCE(ROUND(AVG(dr.rating), 1), 0) AS average_rating,
                     COUNT(DISTINCT dr.id) AS review_count,
+                    u.username AS owner_username,
                     MAX(df.created_at) AS followed_at,
                     true AS is_following
              FROM deck_follows df
              INNER JOIN decks d ON d.id = df.deck_id
+             INNER JOIN users u ON u.id = d.user_id
              LEFT JOIN cards c ON c.deck_id = d.id
              LEFT JOIN deck_follows df_all ON df_all.deck_id = d.id
              LEFT JOIN deck_reviews dr ON dr.deck_id = d.id
              WHERE df.user_id = :user_id
-             GROUP BY d.id
+             GROUP BY d.id, u.username
              ORDER BY followed_at DESC'
         );
         $statement->execute(['user_id' => $userId]);
@@ -172,16 +183,18 @@ final class DeckRepository
                     COUNT(DISTINCT df.id) AS learner_count,
                     COALESCE(ROUND(AVG(dr.rating), 1), 0) AS average_rating,
                     COUNT(DISTINCT dr.id) AS review_count,
+                    u.username AS owner_username,
                     EXISTS (
                         SELECT 1 FROM deck_follows mine
                         WHERE mine.deck_id = d.id AND mine.user_id = :user_id
                     ) AS is_following
              FROM decks d
+             INNER JOIN users u ON u.id = d.user_id
              LEFT JOIN cards c ON c.deck_id = d.id
              LEFT JOIN deck_follows df ON df.deck_id = d.id
              LEFT JOIN deck_reviews dr ON dr.deck_id = d.id
              WHERE d.id = :deck_id AND d.is_public = true
-             GROUP BY d.id
+             GROUP BY d.id, u.username
              LIMIT 1'
         );
         $statement->execute([
@@ -274,6 +287,39 @@ final class DeckRepository
             'SELECT id, name, description, deck_type, source_language, target_language, category, background_url, is_public, created_at
              FROM decks
              WHERE id = :deck_id AND user_id = :user_id
+             LIMIT 1'
+        );
+        $statement->execute([
+            'deck_id' => $deckId,
+            'user_id' => $userId,
+        ]);
+
+        $row = $statement->fetch();
+
+        return $row === false ? null : $row;
+    }
+
+    public function findStudyableById(int $deckId, int $userId): ?array
+    {
+        $statement = $this->connection->prepare(
+            'SELECT d.id, d.user_id, d.name, d.description, d.deck_type, d.source_language, d.target_language,
+                    d.category, d.background_url, d.is_public, d.created_at,
+                    EXISTS (
+                        SELECT 1 FROM deck_follows mine
+                        WHERE mine.deck_id = d.id AND mine.user_id = :user_id
+                    ) AS is_following
+             FROM decks d
+             WHERE d.id = :deck_id
+               AND (
+                    d.user_id = :user_id
+                    OR (
+                        d.is_public = true
+                        AND EXISTS (
+                            SELECT 1 FROM deck_follows followed
+                            WHERE followed.deck_id = d.id AND followed.user_id = :user_id
+                        )
+                    )
+               )
              LIMIT 1'
         );
         $statement->execute([

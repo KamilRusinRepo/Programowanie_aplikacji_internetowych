@@ -93,6 +93,17 @@
     flex: 1;
 }
 
+.explore-card > .explore-follow-form {
+    padding: 0 16px 14px;
+    display: flex;
+    justify-content: center;
+}
+
+.explore-card > .explore-follow-form .explore-follow-btn {
+    width: min(170px, 100%);
+    min-height: 38px;
+}
+
 .explore-card-meta {
     display: flex;
     flex-wrap: wrap;
@@ -103,11 +114,18 @@
 }
 
 .explore-follow-form {
-    padding: 0 16px 16px;
+    padding: 0;
+    margin: 0;
+}
+
+.explore-deck-actions {
+    display: grid;
+    gap: 10px;
+    justify-items: center;
 }
 
 .explore-follow-btn {
-    width: 100%;
+    width: min(170px, 100%);
     min-height: 42px;
     border-radius: 12px;
     border: 2px solid #22c55e;
@@ -119,6 +137,12 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
+}
+
+.explore-deck-actions .deck-primary-btn {
+    min-height: 42px;
+    border-radius: 12px;
+    width: min(170px, 100%);
 }
 
 .explore-follow-btn:hover {
@@ -173,6 +197,18 @@
 .explore-deck-copy p {
     margin: 0 0 12px;
     color: #64748b;
+}
+
+.explore-deck-author {
+    margin: -4px 0 12px;
+    color: #8ca0bb;
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.explore-deck-author strong {
+    color: #0f172a;
+    font-weight: 900;
 }
 
 .explore-tabs {
@@ -416,6 +452,7 @@ html.theme-dark .explore-review-form textarea {
 }
 
 html.theme-dark .explore-deck-copy h1,
+html.theme-dark .explore-deck-author strong,
 html.theme-dark .explore-public-card h3,
 html.theme-dark .explore-review-form h2,
 html.theme-dark .explore-review strong {
@@ -423,6 +460,7 @@ html.theme-dark .explore-review strong {
 }
 
 html.theme-dark .explore-deck-copy p,
+html.theme-dark .explore-deck-author,
 html.theme-dark .explore-public-card p,
 html.theme-dark .explore-card-meta,
 html.theme-dark .explore-review p,

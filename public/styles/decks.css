@@ -243,6 +243,7 @@
 }
 
 .deck-card-icon {
+    position: relative;
     height: 112px;
     display: grid;
     place-items: center;
@@ -253,11 +254,31 @@
     background-position: center;
 }
 
+.deck-image-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    min-height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #16a34a;
+    font-size: 0.68rem;
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
 .deck-card-icon.has-background {
     background-color: #0f172a;
 }
 
-.deck-card-icon.has-background span {
+.deck-card-icon.has-background > span:not(.deck-image-badge) {
     display: none;
 }
 
@@ -717,11 +738,20 @@ html.theme-dark .deck-card-icon-tech {
 }
 
 .deck-follow-actions {
-    padding: 0 16px 16px;
+    padding: 0 16px 14px;
+    display: grid;
+    gap: 10px;
 }
 
+.deck-follow-actions form {
+    margin: 0;
+}
+
+.deck-follow-actions .deck-primary-btn,
 .deck-follow-actions .deck-outline-btn {
-    width: 100%;
+    width: min(180px, 100%);
+    min-height: 38px;
+    justify-self: center;
 }
 
 .deck-primary-btn,
