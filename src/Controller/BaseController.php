@@ -42,6 +42,43 @@ abstract class BaseController
         }
     }
 
+    protected function requireAccount(): void
+    {
+        $user = $this->currentUser();
+        if ($user === null) {
+            $this->redirect('/login');
+        }
+
+        if (($user['is_guest'] ?? false) === true || ($user['role'] ?? '') === 'GUEST') {
+            $username = (string) ($user['username'] ?? 'Guest');
+
+            $this->render('errors/account_required', [
+                'title' => 'Account required',
+                'displayName' => $username,
+                'userInitials' => strtoupper(substr($username, 0, 1)),
+                'nav' => [
+                    'dashboard' => '',
+                    'decks' => '',
+                    'explore' => '',
+                    'stats' => '',
+                    'settings' => '',
+                ],
+                'raw' => [
+                    'extraCss' => '<link rel="stylesheet" href="/styles/settings.css?v=3">',
+                    'extraJs' => '',
+                ],
+            ], 'layout/dashboard');
+            exit;
+        }
+    }
+
+    protected function isGuestUser(?array $user = null): bool
+    {
+        $user ??= $this->currentUser();
+
+        return $user !== null && (($user['is_guest'] ?? false) === true || ($user['role'] ?? '') === 'GUEST');
+    }
+
     protected function withOldInput(Request $request): array
     {
         return [
