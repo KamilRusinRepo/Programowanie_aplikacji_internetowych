@@ -49,5 +49,20 @@ spl_autoload_register(static function (string $class) use ($rootPath): void {
 });
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+    $secureCookie = filter_var(
+        app_env('SESSION_COOKIE_SECURE', $isHttps ? 'true' : 'false'),
+        FILTER_VALIDATE_BOOLEAN
+    );
+
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'secure' => $secureCookie,
+        'httponly' => true,
+        'samesite' => 'Strict',
+    ]);
+
     session_start();
 }
