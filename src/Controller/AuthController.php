@@ -80,12 +80,12 @@ final class AuthController extends BaseController
             return;
         }
 
-        $_SESSION['user'] = [
+        $this->startAuthenticatedSession([
             'id' => $result['user']->id,
             'username' => $result['user']->username,
             'email' => $result['user']->email,
             'role' => $result['user']->roleName,
-        ];
+        ]);
 
         if ($request->expectsJson()) {
             $this->json([
@@ -157,12 +157,12 @@ final class AuthController extends BaseController
             return;
         }
 
-        $_SESSION['user'] = [
+        $this->startAuthenticatedSession([
             'id' => $result['user']->id,
             'username' => $result['user']->username,
             'email' => $result['user']->email,
             'role' => $result['user']->roleName,
-        ];
+        ]);
 
         $this->migrateGuestData((int) $result['user']->id, is_array($guestDecks) ? $guestDecks : [], is_array($guestFollows) ? $guestFollows : []);
 
@@ -227,26 +227,46 @@ final class AuthController extends BaseController
 
     public function guest(Request $request): void
     {
-        $_SESSION['user'] = [
+        $this->startAuthenticatedSession([
             'id' => 0,
             'username' => 'guest#' . random_int(1000, 9999),
             'email' => '',
             'role' => 'GUEST',
             'is_guest' => true,
-        ];
+        ]);
 
         $this->redirect('/dashboard');
     }
 
     public function logout(Request $request): void
     {
-        $user = $this->currentUser();
-        if ($user !== null && $this->isGuest($user)) {
-            unset($_SESSION['guest_decks'], $_SESSION['guest_followed_decks'], $_SESSION['guest_study_summaries']);
+        $this->destroySession();
+        $this->redirect('/login');
+    }
+
+    private function startAuthenticatedSession(array $user): void
+    {
+        session_regenerate_id(true);
+        $_SESSION['user'] = $user;
+    }
+
+    private function destroySession(): void
+    {
+        $_SESSION = [];
+
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', [
+                'expires' => time() - 42000,
+                'path' => $params['path'] ?? '/',
+                'domain' => $params['domain'] ?? '',
+                'secure' => (bool) ($params['secure'] ?? false),
+                'httponly' => (bool) ($params['httponly'] ?? true),
+                'samesite' => $params['samesite'] ?? 'Strict',
+            ]);
         }
 
-        unset($_SESSION['user']);
-        $this->redirect('/login');
+        session_destroy();
     }
 
     private function isGuest(array $user): bool
