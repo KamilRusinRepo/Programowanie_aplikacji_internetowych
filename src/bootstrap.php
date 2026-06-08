@@ -33,6 +33,12 @@ if (!function_exists('app_env')) {
     }
 }
 
+$isProduction = app_env('APP_ENV', 'prod') === 'prod';
+ini_set('display_errors', $isProduction ? '0' : '1');
+ini_set('display_startup_errors', $isProduction ? '0' : '1');
+ini_set('log_errors', '1');
+error_reporting(E_ALL);
+
 spl_autoload_register(static function (string $class) use ($rootPath): void {
     $prefix = 'FlashMind\\';
 
