@@ -8,6 +8,8 @@
                 <div class="form-error-box" data-form-error></div>
 
                 <form method="post" action="/register" class="auth-form" data-auth-form>
+                    <input type="hidden" name="csrf_token" value="{{csrfToken}}">
+
                     <label>
                         <span class="label-small">Username</span>
                         <input type="text" name="username" placeholder="Your username" value="{{old.username}}" autocomplete="username">

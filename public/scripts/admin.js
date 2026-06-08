@@ -17,6 +17,38 @@
         });
     };
 
+    const isStrongPassword = (password) => (
+        /[a-z]/.test(password)
+        && /[A-Z]/.test(password)
+        && /\d/.test(password)
+        && /[^a-zA-Z\d]/.test(password)
+    );
+
+    const validatePasswordLive = () => {
+        if (!modalPassword) return;
+
+        const password = modalPassword.value;
+        const passwordError = document.querySelector('[data-modal-error="password"]');
+        if (!passwordError) return;
+
+        if (password === '') {
+            passwordError.textContent = modalPassword.required ? 'Hasło jest wymagane.' : '';
+            return;
+        }
+
+        if (password.length < 8) {
+            passwordError.textContent = 'Hasło musi mieć co najmniej 8 znaków.';
+            return;
+        }
+
+        if (!isStrongPassword(password)) {
+            passwordError.textContent = 'Hasło musi zawierać małą literę, dużą literę, cyfrę i znak specjalny.';
+            return;
+        }
+
+        passwordError.textContent = '';
+    };
+
     const readInitialModalState = () => {
         if (!adminMain) return null;
         try {
@@ -76,6 +108,7 @@
         modalPassword.placeholder = isEdit ? 'Leave blank to keep current password' : '';
         modalRole.value = user.role === 'ADMIN' ? 'ADMIN' : 'USER';
         showModalErrors(user.errors || {});
+        validatePasswordLive();
         userModal.hidden = false;
         modalUsername.focus();
     };
@@ -88,6 +121,7 @@
 
     modalUsername?.addEventListener('input', scheduleIdentityValidation);
     modalEmail?.addEventListener('input', scheduleIdentityValidation);
+    modalPassword?.addEventListener('input', validatePasswordLive);
 
     document.querySelector('[data-add-user]')?.addEventListener('click', () => {
         openUserModal('add');

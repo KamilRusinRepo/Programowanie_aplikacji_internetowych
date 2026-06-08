@@ -9,6 +9,12 @@ use FlashMind\Http\Request;
 
 final class SettingsController extends BaseController
 {
+    private const MAX_EMAIL_LENGTH = 255;
+    private const MAX_PASSWORD_LENGTH = 255;
+    private const MIN_PASSWORD_LENGTH = 8;
+    private const MIN_USERNAME_LENGTH = 3;
+    private const MAX_USERNAME_LENGTH = 50;
+
     public function __construct(
         private readonly UserRepository $users,
     ) {
@@ -72,18 +78,26 @@ final class SettingsController extends BaseController
 
         if ($currentPassword === '') {
             $errors['current_password'] = 'Obecne hasło jest wymagane.';
+        } elseif (mb_strlen($currentPassword) > self::MAX_PASSWORD_LENGTH) {
+            $errors['current_password'] = 'Obecne hasło może mieć maksymalnie 255 znaków.';
         } elseif (!password_verify($currentPassword, $userModel->passwordHash)) {
             $errors['current_password'] = 'Obecne hasło jest niepoprawne.';
         }
 
         if ($password === '') {
             $errors['password'] = 'Nowe hasło jest wymagane.';
-        } elseif (mb_strlen($password) < 8) {
+        } elseif (mb_strlen($password) < self::MIN_PASSWORD_LENGTH) {
             $errors['password'] = 'Hasło musi mieć co najmniej 8 znaków.';
+        } elseif (mb_strlen($password) > self::MAX_PASSWORD_LENGTH) {
+            $errors['password'] = 'Hasło może mieć maksymalnie 255 znaków.';
+        } elseif (!$this->isStrongPassword($password)) {
+            $errors['password'] = 'Hasło musi zawierać małą literę, dużą literę, cyfrę i znak specjalny.';
         }
 
         if ($passwordConfirmation === '') {
             $errors['password_confirmation'] = 'Powtórz nowe hasło.';
+        } elseif (mb_strlen($passwordConfirmation) > self::MAX_PASSWORD_LENGTH) {
+            $errors['password_confirmation'] = 'Powtórzone hasło może mieć maksymalnie 255 znaków.';
         } elseif ($password !== $passwordConfirmation) {
             $errors['password_confirmation'] = 'Hasła nie są takie same.';
         }
@@ -147,7 +161,7 @@ final class SettingsController extends BaseController
 
         if ($username === '') {
             $errors['username'] = 'Nazwa użytkownika jest wymagana.';
-        } elseif (mb_strlen($username) < 3 || mb_strlen($username) > 50) {
+        } elseif (mb_strlen($username) < self::MIN_USERNAME_LENGTH || mb_strlen($username) > self::MAX_USERNAME_LENGTH) {
             $errors['username'] = 'Nazwa użytkownika musi mieć od 3 do 50 znaków.';
         } elseif ($this->users->usernameExistsForAnotherUser($username, $userId)) {
             $errors['username'] = 'Ta nazwa użytkownika jest już zajęta.';
@@ -155,6 +169,8 @@ final class SettingsController extends BaseController
 
         if ($email === '') {
             $errors['email'] = 'Email jest wymagany.';
+        } elseif (mb_strlen($email) > self::MAX_EMAIL_LENGTH) {
+            $errors['email'] = 'Email może mieć maksymalnie 255 znaków.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = 'Email ma niepoprawny format.';
         } elseif ($this->users->emailExistsForAnotherUser($email, $userId)) {
@@ -162,6 +178,14 @@ final class SettingsController extends BaseController
         }
 
         return $errors;
+    }
+
+    private function isStrongPassword(string $password): bool
+    {
+        return preg_match('/[a-z]/', $password) === 1
+            && preg_match('/[A-Z]/', $password) === 1
+            && preg_match('/\d/', $password) === 1
+            && preg_match('/[^a-zA-Z\d]/', $password) === 1;
     }
 
     private function passwordChangedText(?string $date): string

@@ -11,6 +11,11 @@ use FlashMind\Service\AuthService;
 
 final class AuthController extends BaseController
 {
+    private const MAX_EMAIL_LENGTH = 255;
+    private const MAX_PASSWORD_LENGTH = 255;
+    private const MIN_USERNAME_LENGTH = 3;
+    private const MAX_USERNAME_LENGTH = 50;
+
     public function __construct(
         private readonly AuthService $authService,
         private readonly DeckRepository $decks,
@@ -29,12 +34,37 @@ final class AuthController extends BaseController
             'title' => 'Login',
             'errors' => [],
             'old' => [],
+            'csrfToken' => $this->csrfToken(),
         ]);
     }
 
     public function login(Request $request): void
     {
-        $result = $this->authService->login($request->post);
+        if (!$this->isValidCsrfToken((string) ($request->post['csrf_token'] ?? ''))) {
+            $errors = ['general' => 'Security token is invalid. Please try again.'];
+
+            if ($request->expectsJson()) {
+                $this->json([
+                    'success' => false,
+                    'errors' => $errors,
+                ], 419);
+            }
+
+            $this->render('auth/login', [
+                'title' => 'Login',
+                'errors' => $errors,
+                'old' => $request->post,
+                'csrfToken' => $this->csrfToken(),
+            ]);
+
+            return;
+        }
+
+        $result = $this->authService->login(
+            $request->post,
+            $this->clientIpAddress(),
+            (string) ($_SERVER['HTTP_USER_AGENT'] ?? '')
+        );
 
         if (!$result['success']) {
             if ($request->expectsJson()) {
@@ -48,17 +78,18 @@ final class AuthController extends BaseController
                 'title' => 'Login',
                 'errors' => $result['errors'],
                 'old' => $request->post,
+                'csrfToken' => $this->csrfToken(),
             ]);
 
             return;
         }
 
-        $_SESSION['user'] = [
+        $this->startAuthenticatedSession([
             'id' => $result['user']->id,
             'username' => $result['user']->username,
             'email' => $result['user']->email,
             'role' => $result['user']->roleName,
-        ];
+        ]);
 
         if ($request->expectsJson()) {
             $this->json([
@@ -82,11 +113,32 @@ final class AuthController extends BaseController
             'title' => 'Register',
             'errors' => [],
             'old' => [],
+            'csrfToken' => $this->csrfToken(),
         ]);
     }
 
     public function register(Request $request): void
     {
+        if (!$this->isValidCsrfToken((string) ($request->post['csrf_token'] ?? ''))) {
+            $errors = ['general' => 'Security token is invalid. Please try again.'];
+
+            if ($request->expectsJson()) {
+                $this->json([
+                    'success' => false,
+                    'errors' => $errors,
+                ], 419);
+            }
+
+            $this->render('auth/register', [
+                'title' => 'Register',
+                'errors' => $errors,
+                'old' => $request->post,
+                'csrfToken' => $this->csrfToken(),
+            ]);
+
+            return;
+        }
+
         $guestDecks = $_SESSION['guest_decks'] ?? [];
         $guestFollows = $_SESSION['guest_followed_decks'] ?? [];
         $result = $this->authService->register($request->post);
@@ -103,17 +155,18 @@ final class AuthController extends BaseController
                 'title' => 'Register',
                 'errors' => $result['errors'],
                 'old' => $request->post,
+                'csrfToken' => $this->csrfToken(),
             ]);
 
             return;
         }
 
-        $_SESSION['user'] = [
+        $this->startAuthenticatedSession([
             'id' => $result['user']->id,
             'username' => $result['user']->username,
             'email' => $result['user']->email,
             'role' => $result['user']->roleName,
-        ];
+        ]);
 
         $this->migrateGuestData((int) $result['user']->id, is_array($guestDecks) ? $guestDecks : [], is_array($guestFollows) ? $guestFollows : []);
 
@@ -136,12 +189,26 @@ final class AuthController extends BaseController
         $passwordConfirmation = (string) $request->input('password_confirmation', '');
         $errors = [];
 
-        if ($username !== '' && $this->authService->usernameExists($username)) {
+        if ($username !== '' && (mb_strlen($username) < self::MIN_USERNAME_LENGTH || mb_strlen($username) > self::MAX_USERNAME_LENGTH)) {
+            $errors['username'] = 'Username must be between 3 and 50 characters.';
+        } elseif ($username !== '' && $this->authService->usernameExists($username)) {
             $errors['username'] = 'Username is already taken.';
         }
 
-        if ($email !== '' && $this->authService->emailExists($email)) {
+        if ($email !== '' && mb_strlen($email) > self::MAX_EMAIL_LENGTH) {
+            $errors['email'] = 'Email must have at most 255 characters.';
+        } elseif ($email !== '' && $this->authService->emailExists($email)) {
             $errors['email'] = 'Email is already taken.';
+        }
+
+        if ($password !== '' && mb_strlen($password) > self::MAX_PASSWORD_LENGTH) {
+            $errors['password'] = 'Password must have at most 255 characters.';
+        } elseif ($password !== '' && !$this->isStrongPassword($password)) {
+            $errors['password'] = 'Password must contain a lowercase letter, uppercase letter, number, and special character.';
+        }
+
+        if ($passwordConfirmation !== '' && mb_strlen($passwordConfirmation) > self::MAX_PASSWORD_LENGTH) {
+            $errors['password_confirmation'] = 'Password confirmation must have at most 255 characters.';
         }
 
         if ($password !== '' && $passwordConfirmation !== '' && $password !== $passwordConfirmation) {
@@ -154,28 +221,66 @@ final class AuthController extends BaseController
         ], $errors === [] ? 200 : 422);
     }
 
+    private function isStrongPassword(string $password): bool
+    {
+        return preg_match('/[a-z]/', $password) === 1
+            && preg_match('/[A-Z]/', $password) === 1
+            && preg_match('/\d/', $password) === 1
+            && preg_match('/[^a-zA-Z\d]/', $password) === 1;
+    }
+
     public function guest(Request $request): void
     {
-        $_SESSION['user'] = [
+        $this->startAuthenticatedSession([
             'id' => 0,
             'username' => 'guest#' . random_int(1000, 9999),
             'email' => '',
             'role' => 'GUEST',
             'is_guest' => true,
-        ];
+        ]);
 
         $this->redirect('/dashboard');
     }
 
     public function logout(Request $request): void
     {
-        $user = $this->currentUser();
-        if ($user !== null && $this->isGuest($user)) {
-            unset($_SESSION['guest_decks'], $_SESSION['guest_followed_decks'], $_SESSION['guest_study_summaries']);
+        $this->destroySession();
+        $this->redirect('/login');
+    }
+
+    private function startAuthenticatedSession(array $user): void
+    {
+        session_regenerate_id(true);
+        $_SESSION['user'] = $user;
+    }
+
+    private function clientIpAddress(): string
+    {
+        $forwardedFor = (string) ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? '');
+        if ($forwardedFor !== '') {
+            return trim(explode(',', $forwardedFor)[0]);
         }
 
-        unset($_SESSION['user']);
-        $this->redirect('/login');
+        return (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+    }
+
+    private function destroySession(): void
+    {
+        $_SESSION = [];
+
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', [
+                'expires' => time() - 42000,
+                'path' => $params['path'] ?? '/',
+                'domain' => $params['domain'] ?? '',
+                'secure' => (bool) ($params['secure'] ?? false),
+                'httponly' => (bool) ($params['httponly'] ?? true),
+                'samesite' => $params['samesite'] ?? 'Strict',
+            ]);
+        }
+
+        session_destroy();
     }
 
     private function isGuest(array $user): bool

@@ -9,6 +9,12 @@ use FlashMind\Repository\UserRepository;
 
 final class AdminController extends BaseController
 {
+    private const MAX_EMAIL_LENGTH = 255;
+    private const MAX_PASSWORD_LENGTH = 255;
+    private const MIN_PASSWORD_LENGTH = 8;
+    private const MIN_USERNAME_LENGTH = 3;
+    private const MAX_USERNAME_LENGTH = 50;
+
     public function __construct(
         private readonly UserRepository $users,
     ) {
@@ -111,12 +117,16 @@ final class AdminController extends BaseController
         $email = trim((string) $request->input('email', ''));
         $errors = [];
 
-        if ($username !== '' && $this->users->usernameExistsForAnotherUser($username, $targetId)) {
+        if ($username !== '' && (mb_strlen($username) < self::MIN_USERNAME_LENGTH || mb_strlen($username) > self::MAX_USERNAME_LENGTH)) {
+            $errors['username'] = 'Nazwa użytkownika musi mieć od 3 do 50 znaków.';
+        } elseif ($username !== '' && $this->users->usernameExistsForAnotherUser($username, $targetId)) {
             $errors['username'] = 'Ta nazwa użytkownika jest już zajęta.';
         }
 
         if ($email !== '') {
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            if (mb_strlen($email) > self::MAX_EMAIL_LENGTH) {
+                $errors['email'] = 'Email może mieć maksymalnie 255 znaków.';
+            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors['email'] = 'Email ma niepoprawny format.';
             } elseif ($this->users->emailExistsForAnotherUser($email, $targetId)) {
                 $errors['email'] = 'Ten email jest już zajęty.';
@@ -229,7 +239,7 @@ final class AdminController extends BaseController
 
         if ($username === '') {
             $errors['username'] = 'Nazwa użytkownika jest wymagana.';
-        } elseif (mb_strlen($username) < 3 || mb_strlen($username) > 50) {
+        } elseif (mb_strlen($username) < self::MIN_USERNAME_LENGTH || mb_strlen($username) > self::MAX_USERNAME_LENGTH) {
             $errors['username'] = 'Nazwa użytkownika musi mieć od 3 do 50 znaków.';
         } elseif ($this->users->usernameExistsForAnotherUser($username, $excludedUserId)) {
             $errors['username'] = 'Ta nazwa użytkownika jest już zajęta.';
@@ -237,6 +247,8 @@ final class AdminController extends BaseController
 
         if ($email === '') {
             $errors['email'] = 'Email jest wymagany.';
+        } elseif (mb_strlen($email) > self::MAX_EMAIL_LENGTH) {
+            $errors['email'] = 'Email może mieć maksymalnie 255 znaków.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = 'Email ma niepoprawny format.';
         } elseif ($this->users->emailExistsForAnotherUser($email, $excludedUserId)) {
@@ -245,11 +257,23 @@ final class AdminController extends BaseController
 
         if ($passwordRequired && $password === '') {
             $errors['password'] = 'Hasło jest wymagane.';
-        } elseif ($password !== '' && mb_strlen($password) < 8) {
+        } elseif ($password !== '' && mb_strlen($password) < self::MIN_PASSWORD_LENGTH) {
             $errors['password'] = 'Hasło musi mieć co najmniej 8 znaków.';
+        } elseif ($password !== '' && mb_strlen($password) > self::MAX_PASSWORD_LENGTH) {
+            $errors['password'] = 'Hasło może mieć maksymalnie 255 znaków.';
+        } elseif ($password !== '' && !$this->isStrongPassword($password)) {
+            $errors['password'] = 'Hasło musi zawierać małą literę, dużą literę, cyfrę i znak specjalny.';
         }
 
         return $errors;
+    }
+
+    private function isStrongPassword(string $password): bool
+    {
+        return preg_match('/[a-z]/', $password) === 1
+            && preg_match('/[A-Z]/', $password) === 1
+            && preg_match('/\d/', $password) === 1
+            && preg_match('/[^a-zA-Z\d]/', $password) === 1;
     }
 
     private function requireAdmin(): void
