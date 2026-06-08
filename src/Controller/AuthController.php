@@ -60,7 +60,11 @@ final class AuthController extends BaseController
             return;
         }
 
-        $result = $this->authService->login($request->post);
+        $result = $this->authService->login(
+            $request->post,
+            $this->clientIpAddress(),
+            (string) ($_SERVER['HTTP_USER_AGENT'] ?? '')
+        );
 
         if (!$result['success']) {
             if ($request->expectsJson()) {
@@ -248,6 +252,16 @@ final class AuthController extends BaseController
     {
         session_regenerate_id(true);
         $_SESSION['user'] = $user;
+    }
+
+    private function clientIpAddress(): string
+    {
+        $forwardedFor = (string) ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? '');
+        if ($forwardedFor !== '') {
+            return trim(explode(',', $forwardedFor)[0]);
+        }
+
+        return (string) ($_SERVER['REMOTE_ADDR'] ?? '');
     }
 
     private function destroySession(): void

@@ -19,6 +19,7 @@ use FlashMind\Repository\RoleRepository;
 use FlashMind\Repository\CardRepository;
 use FlashMind\Repository\DeckRepository;
 use FlashMind\Repository\LearningRepository;
+use FlashMind\Repository\LoginAttemptRepository;
 use FlashMind\Repository\UserRepository;
 use FlashMind\Service\AuthService;
 
@@ -29,7 +30,8 @@ $deckRepository = new DeckRepository();
 $cardRepository = new CardRepository();
 $learningRepository = new LearningRepository();
 $roleRepository = new RoleRepository();
-$authService = new AuthService($userRepository, $roleRepository);
+$loginAttemptRepository = new LoginAttemptRepository();
+$authService = new AuthService($userRepository, $roleRepository, $loginAttemptRepository);
 
 $homeController = new HomeController();
 $authController = new AuthController($authService, $deckRepository, $cardRepository);

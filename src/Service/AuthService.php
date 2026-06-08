@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace FlashMind\Service;
 
+use FlashMind\Repository\LoginAttemptRepository;
 use FlashMind\Repository\RoleRepository;
 use FlashMind\Repository\UserRepository;
 
 final class AuthService
 {
+    private const LOGIN_ATTEMPT_LIMIT = 5;
+    private const LOGIN_ATTEMPT_WINDOW_MINUTES = 10;
+    private const LOGIN_LOCK_SECONDS = 300;
     private const MAX_LOGIN_LENGTH = 255;
     private const MAX_EMAIL_LENGTH = 255;
     private const MAX_PASSWORD_LENGTH = 255;
@@ -19,6 +23,7 @@ final class AuthService
     public function __construct(
         private readonly UserRepository $users,
         private readonly RoleRepository $roles,
+        private readonly LoginAttemptRepository $loginAttempts,
     ) {
     }
 
@@ -108,7 +113,7 @@ final class AuthService
             && preg_match('/[^a-zA-Z\d]/', $password) === 1;
     }
 
-    public function login(array $input): array
+    public function login(array $input, string $ipAddress = '', string $userAgent = ''): array
     {
         $login = trim((string) ($input['login'] ?? ''));
         $password = (string) ($input['password'] ?? '');
@@ -133,9 +138,30 @@ final class AuthService
             ];
         }
 
+        $remainingSeconds = $this->loginAttempts->lockRemainingSeconds(
+            $login,
+            $ipAddress,
+            self::LOGIN_ATTEMPT_LIMIT,
+            self::LOGIN_ATTEMPT_WINDOW_MINUTES,
+            self::LOGIN_LOCK_SECONDS
+        );
+
+        if ($remainingSeconds > 0) {
+            $this->loginAttempts->record($login, $ipAddress, $userAgent, false, 'rate_limited');
+
+            return [
+                'success' => false,
+                'errors' => [
+                    'general' => 'Too many failed login attempts. Try again in ' . $this->formatLockTime($remainingSeconds) . '.',
+                ],
+            ];
+        }
+
         $user = $this->users->findByLogin($login);
 
         if ($user === null) {
+            $this->loginAttempts->record($login, $ipAddress, $userAgent, false, 'invalid_credentials');
+
             return [
                 'success' => false,
                 'errors' => ['login' => 'Invalid credentials.'],
@@ -143,6 +169,8 @@ final class AuthService
         }
 
         if (!$user->isEnabled) {
+            $this->loginAttempts->record($login, $ipAddress, $userAgent, false, 'account_disabled');
+
             return [
                 'success' => false,
                 'errors' => ['login' => 'Account is blocked.'],
@@ -150,11 +178,15 @@ final class AuthService
         }
 
         if (!password_verify($password, $user->passwordHash)) {
+            $this->loginAttempts->record($login, $ipAddress, $userAgent, false, 'invalid_credentials');
+
             return [
                 'success' => false,
                 'errors' => ['password' => 'Invalid credentials.'],
             ];
         }
+
+        $this->loginAttempts->record($login, $ipAddress, $userAgent, true);
 
         return [
             'success' => true,
@@ -171,5 +203,16 @@ final class AuthService
     public function emailExists(string $email): bool
     {
         return $this->users->emailExistsForAnotherUser($email);
+    }
+
+    private function formatLockTime(int $seconds): string
+    {
+        if ($seconds < 60) {
+            return $seconds . ' seconds';
+        }
+
+        $minutes = (int) ceil($seconds / 60);
+
+        return $minutes . ($minutes === 1 ? ' minute' : ' minutes');
     }
 }
