@@ -630,6 +630,55 @@ textarea:disabled,
     }
 }
 
+@media (max-width: 380px) {
+    .auth-page,
+    .dashboard-page {
+        padding: 10px;
+    }
+
+    .auth-card,
+    .auth-card.compact,
+    .dashboard-card {
+        border-radius: 16px;
+    }
+
+    .auth-brand-panel,
+    .auth-form-panel,
+    .dashboard-card {
+        padding: 18px;
+    }
+
+    .auth-form-panel h2,
+    .dashboard-card h2 {
+        font-size: 1.28rem;
+        line-height: 1.18;
+    }
+
+    .auth-form-panel > p {
+        font-size: 0.94rem;
+        line-height: 1.45;
+    }
+
+    .auth-form {
+        gap: 10px;
+    }
+
+    .auth-form input,
+    .password-field {
+        min-height: 46px;
+    }
+
+    .btn {
+        min-height: 46px;
+        width: 100%;
+    }
+
+    .form-error-box {
+        padding: 12px 14px;
+        border-radius: 12px;
+    }
+}
+
 html.theme-dark .settings-toggle span {
     background: #263241;
 }

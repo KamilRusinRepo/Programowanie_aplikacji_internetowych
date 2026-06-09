@@ -7,9 +7,9 @@
     <script src="/scripts/theme-init.js?v=2"></script>
     <script defer src="/scripts/language-init.js?v=8"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/styles/app.css?v=3">
+    <link rel="stylesheet" href="/styles/app.css?v=4">
     <link rel="stylesheet" href="/styles/branding.css">
-    <link rel="stylesheet" href="/styles/dashboard.css?v=collapse13">
+    <link rel="stylesheet" href="/styles/dashboard.css?v=mobile-360c">
     {{raw.extraCss}}
     <meta name="robots" content="noindex,nofollow">
 </head>
@@ -72,6 +72,32 @@
             {{content}}
         </div>
     </div>
+    <nav class="mobile-bottom-nav" aria-label="Mobile primary">
+        <a href="/dashboard" class="mobile-bottom-nav-item {{nav.dashboard}}">
+            <img src="/icons/sidebar/home.svg" alt="" aria-hidden="true">
+            <span>Home</span>
+        </a>
+        <a href="/decks" class="mobile-bottom-nav-item {{nav.decks}}">
+            <img src="/icons/sidebar/create_deck.svg" alt="" aria-hidden="true">
+            <span>My Decks</span>
+        </a>
+        <a href="/explore" class="mobile-bottom-nav-item {{nav.explore}}">
+            <img src="/icons/sidebar/explore.svg" alt="" aria-hidden="true">
+            <span>Explore</span>
+        </a>
+        <a href="/statistics" class="mobile-bottom-nav-item {{nav.stats}}">
+            <img src="/icons/sidebar/statistics.svg" alt="" aria-hidden="true">
+            <span>Stats</span>
+        </a>
+        <a href="/admin" class="mobile-bottom-nav-item {{adminNav.class}}">
+            <img src="/icons/admin_panel/admin_icon.svg" alt="" aria-hidden="true">
+            <span>Admin</span>
+        </a>
+        <a href="/settings" class="mobile-bottom-nav-item {{nav.settings}}">
+            <img src="/icons/sidebar/settings.svg" alt="" aria-hidden="true">
+            <span>Settings</span>
+        </a>
+    </nav>
     <div class="app-confirm-modal" data-confirm-modal hidden>
         <div class="app-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="app-confirm-title">
             <h2 id="app-confirm-title" data-confirm-title>Are you sure?</h2>

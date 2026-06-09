@@ -198,7 +198,7 @@ final class AdminController extends BaseController
                 'modalStateJson' => $modal === [] ? 'null' : (json_encode($modal, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: 'null'),
             ],
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/admin.css?v=4">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/admin.css?v=5">',
                 'extraJs' => '<script defer src="/scripts/admin.js?v=2"></script>',
             ],
             'users' => $users,

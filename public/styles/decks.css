@@ -225,8 +225,9 @@
 
 .deck-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 360px));
     gap: 18px;
+    align-items: start;
 }
 
 .deck-card {
@@ -738,20 +739,24 @@ html.theme-dark .deck-card-icon-tech {
 }
 
 .deck-follow-actions {
-    padding: 0 16px 14px;
-    display: grid;
+    padding: 0 16px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 10px;
 }
 
 .deck-follow-actions form {
     margin: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .deck-follow-actions .deck-primary-btn,
 .deck-follow-actions .deck-outline-btn {
-    width: min(180px, 100%);
+    width: min(240px, 100%);
     min-height: 38px;
-    justify-self: center;
 }
 
 .deck-primary-btn,
@@ -1084,6 +1089,171 @@ html.theme-dark .deck-detail-tabs a.is-active {
 
 @media (max-width: 1180px) {
     .deck-grid {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 360px));
+    }
+}
+
+@media (min-width: 1181px) {
+    .deck-grid {
+        grid-template-columns: repeat(3, minmax(0, 360px));
+    }
+}
+
+@media (max-width: 380px) {
+    .deck-create-card,
+    .deck-card,
+    .deck-card-row,
+    .deck-empty,
+    .deck-public {
+        border-radius: 18px;
+    }
+
+    .deck-create-card {
+        padding: 16px;
+    }
+
+    .deck-list-hero h1,
+    .deck-detail-hero h1 {
+        font-size: 1.35rem;
+        line-height: 1.15;
+    }
+
+    .deck-list-hero {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .deck-create-btn {
+        align-self: flex-start;
+        min-height: 46px;
+        max-width: 150px;
+        padding: 9px 16px;
+        font-size: 0.95rem;
+        line-height: 1.15;
+        text-align: center;
+    }
+
+    .deck-grid,
+    .deck-cards {
         grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .deck-card-icon {
+        height: 104px;
+    }
+
+    .deck-card-body {
+        padding: 12px 14px 14px;
+    }
+
+    .deck-card-tags {
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .deck-card-tags span {
+        min-height: 22px;
+        padding: 4px 9px;
+        font-size: 0.66rem;
+    }
+
+    .deck-detail-hero,
+    .deck-detail-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .deck-detail-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        width: 100%;
+    }
+
+    .deck-import-form,
+    .deck-detail-actions .deck-outline-btn,
+    .deck-detail-actions .deck-primary-btn,
+    .deck-detail-actions .deck-danger-btn {
+        width: 100%;
+        min-height: 42px;
+        padding-inline: 10px;
+        font-size: 0.86rem;
+    }
+
+    .deck-detail-actions .deck-primary-btn,
+    .deck-delete-form {
+        grid-column: 1 / -1;
+    }
+
+    .deck-delete-form .deck-danger-btn {
+        width: 100%;
+    }
+
+    .deck-follow-actions {
+        padding: 0 12px 12px;
+        gap: 8px;
+    }
+
+    .deck-follow-actions .deck-primary-btn,
+    .deck-follow-actions .deck-outline-btn {
+        width: min(240px, 100%);
+        min-height: 36px;
+        padding: 7px 10px;
+        font-size: 0.84rem;
+    }
+
+    .deck-card-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 14px;
+        gap: 12px;
+        align-items: start;
+    }
+
+    .deck-card-media {
+        grid-column: auto;
+        width: 96px;
+        height: 96px;
+        justify-self: start;
+    }
+
+    .deck-card-actions {
+        grid-column: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 0;
+        justify-self: end;
+        align-self: center;
+    }
+
+    .deck-card-actions .inline-form {
+        display: inline-flex;
+    }
+
+    .card-icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+    }
+
+    .card-icon-btn img {
+        width: 18px;
+        height: 18px;
+    }
+
+    .deck-add-card-form {
+        padding: 10px;
+        align-items: start;
+        overflow-y: auto;
+    }
+
+    .deck-add-card-form .deck-card-form {
+        width: 100%;
+        border-radius: 18px;
+        padding: 16px;
     }
 }

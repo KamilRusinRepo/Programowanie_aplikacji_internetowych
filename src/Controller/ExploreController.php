@@ -68,7 +68,7 @@ final class ExploreController extends BaseController
             ],
             'decks' => $this->prepareMarketplaceDecks($decks, (int) $user['id'], $isGuest),
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21"><link rel="stylesheet" href="/styles/explore.css?v=17">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26"><link rel="stylesheet" href="/styles/explore.css?v=19">',
                 'extraJs' => '<script defer src="/scripts/explore-filters.js?v=2"></script>',
             ],
         ], 'layout/dashboard');
@@ -124,7 +124,7 @@ final class ExploreController extends BaseController
                 'ratings' => $this->ratingOptions(),
             ]] : [],
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21"><link rel="stylesheet" href="/styles/explore.css?v=17">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26"><link rel="stylesheet" href="/styles/explore.css?v=19">',
             ],
         ], 'layout/dashboard');
     }

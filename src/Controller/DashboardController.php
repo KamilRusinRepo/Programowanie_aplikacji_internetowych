@@ -79,7 +79,7 @@ final class DashboardController extends BaseController
             ],
             'exploreDecks' => $this->prepareExploreDecks($discoverDecks),
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21"><link rel="stylesheet" href="/styles/explore.css?v=17">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26"><link rel="stylesheet" href="/styles/explore.css?v=19">',
             ],
         ], 'layout/dashboard');
     }
