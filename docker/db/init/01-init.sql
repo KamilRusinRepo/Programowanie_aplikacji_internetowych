@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS card_progress (
     correct_count INT NOT NULL DEFAULT 0,
     wrong_count INT NOT NULL DEFAULT 0,
     mastery_level INT NOT NULL DEFAULT 0,
+    wrong_streak INT NOT NULL DEFAULT 0,
     last_answered_at TIMESTAMPTZ,
     next_review_at TIMESTAMPTZ,
     CONSTRAINT card_progress_user_card_unique UNIQUE (user_id, card_id)
