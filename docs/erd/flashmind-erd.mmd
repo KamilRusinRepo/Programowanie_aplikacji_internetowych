@@ -1,0 +1,133 @@
+erDiagram
+    USERS {
+        int id PK
+        varchar username UK
+        varchar email UK
+        varchar password_hash
+        boolean is_enabled
+        timestamptz password_changed_at
+        timestamptz created_at
+    }
+
+    ROLES {
+        int id PK
+        varchar name UK
+    }
+
+    USER_ROLES {
+        int id PK
+        int user_id FK
+        int role_id FK
+        timestamptz created_at
+    }
+
+    DECKS {
+        int id PK
+        int user_id FK
+        varchar name
+        text description
+        varchar deck_type
+        varchar source_language
+        varchar target_language
+        varchar category
+        text background_url
+        boolean is_public
+        timestamptz created_at
+    }
+
+    CARDS {
+        int id PK
+        int deck_id FK
+        text front_question
+        text example_sentence
+        text image_url
+        text answer
+        text translated_example
+        timestamptz created_at
+    }
+
+    STUDY_SESSIONS {
+        int id PK
+        int user_id FK
+        int deck_id FK
+        int total_cards
+        int correct_cards
+        int wrong_cards
+        int xp_earned
+        int duration_seconds
+        timestamptz created_at
+    }
+
+    STUDY_SESSION_ANSWERS {
+        int id PK
+        int session_id FK
+        int card_id FK
+        boolean was_correct
+        text user_answer
+        timestamptz created_at
+    }
+
+    CARD_PROGRESS {
+        int id PK
+        int user_id FK
+        int card_id FK
+        int attempts
+        int correct_count
+        int wrong_count
+        int mastery_level
+        int wrong_streak
+        timestamptz last_answered_at
+        timestamptz next_review_at
+    }
+
+    DECK_FOLLOWS {
+        int id PK
+        int user_id FK
+        int deck_id FK
+        timestamptz created_at
+    }
+
+    DECK_REVIEWS {
+        int id PK
+        int user_id FK
+        int deck_id FK
+        int rating
+        text comment
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    USER_DAILY_PROGRESS {
+        int id PK
+        int user_id FK
+        date progress_date
+        int answered_count
+        int correct_count
+        int xp_earned
+    }
+
+    LOGIN_ATTEMPTS {
+        int id PK
+        varchar login_identifier
+        varchar ip_address
+        text user_agent
+        boolean was_successful
+        varchar failure_reason
+        timestamptz attempted_at
+    }
+
+    USERS ||--o{ USER_ROLES : has
+    ROLES ||--o{ USER_ROLES : grants
+    USERS ||--o{ DECKS : owns
+    DECKS ||--o{ CARDS : contains
+    USERS ||--o{ STUDY_SESSIONS : starts
+    DECKS ||--o{ STUDY_SESSIONS : studied_in
+    STUDY_SESSIONS ||--o{ STUDY_SESSION_ANSWERS : stores
+    CARDS ||--o{ STUDY_SESSION_ANSWERS : answered_as
+    USERS ||--o{ CARD_PROGRESS : tracks
+    CARDS ||--o{ CARD_PROGRESS : has_progress
+    USERS ||--o{ DECK_FOLLOWS : follows
+    DECKS ||--o{ DECK_FOLLOWS : followed_by
+    USERS ||--o{ DECK_REVIEWS : writes
+    DECKS ||--o{ DECK_REVIEWS : receives
+    USERS ||--o{ USER_DAILY_PROGRESS : earns
