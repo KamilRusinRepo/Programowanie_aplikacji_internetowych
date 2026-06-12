@@ -149,7 +149,7 @@ final class SettingsController extends BaseController
                 'passwordChangedText' => $this->passwordChangedText($userModel?->passwordChangedAt ?? $userModel?->createdAt),
             ],
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/settings.css?v=3">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/settings.css?v=4">',
                 'extraJs' => '<script defer src="/scripts/settings.js?v=3"></script>',
             ],
         ], 'layout/dashboard');

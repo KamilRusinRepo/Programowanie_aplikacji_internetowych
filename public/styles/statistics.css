@@ -961,3 +961,95 @@ html.theme-dark .star.is-empty {
     -webkit-text-stroke-color: #526071;
     text-stroke-color: #526071;
 }
+
+@media (max-width: 380px) {
+    .stats-overview-main,
+    .stats-main,
+    .stats-detail-main {
+        max-width: 100%;
+        gap: 16px;
+    }
+
+    .stats-overview-top,
+    .stats-profile-card,
+    .stats-overview-card,
+    .stats-panel,
+    .stats-hero,
+    .stats-detail-hero,
+    .mastery-bucket,
+    .mastery-card-row {
+        border-radius: 16px;
+        padding: 14px;
+    }
+
+    .stats-period-toggle {
+        min-width: 0;
+    }
+
+    .stats-period-toggle button {
+        min-height: 34px;
+        padding-inline: 6px;
+        font-size: 0.72rem;
+    }
+
+    .stats-profile-left {
+        gap: 12px;
+    }
+
+    .stats-profile-badge {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+    }
+
+    .stats-profile-card h1,
+    .stats-hero h1,
+    .stats-detail-hero h1 {
+        font-size: 1.28rem;
+        line-height: 1.15;
+    }
+
+    .stats-profile-metrics div {
+        min-width: 0;
+    }
+
+    .stats-overview-card strong {
+        font-size: 1.75rem;
+    }
+
+    .stats-overview-icon {
+        width: 42px;
+        height: 42px;
+        opacity: 0.55;
+    }
+
+    .stats-panel-title {
+        gap: 8px;
+    }
+
+    .stats-heatmap-wrap {
+        margin-inline: -4px;
+        padding-bottom: 10px;
+    }
+
+    .stats-bars {
+        gap: 6px;
+        height: 170px;
+    }
+
+    .stats-filter-form {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .stats-filter-form select,
+    .stats-filter-form button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .mastery-card-front,
+    .mastery-dates {
+        min-width: 0;
+    }
+}

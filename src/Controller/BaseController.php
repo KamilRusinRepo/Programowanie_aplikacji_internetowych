@@ -64,7 +64,7 @@ abstract class BaseController
                     'settings' => '',
                 ],
                 'raw' => [
-                    'extraCss' => '<link rel="stylesheet" href="/styles/settings.css?v=3">',
+                    'extraCss' => '<link rel="stylesheet" href="/styles/settings.css?v=4">',
                     'extraJs' => '',
                 ],
             ], 'layout/dashboard');

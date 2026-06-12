@@ -78,6 +78,35 @@
     grid-column: 6;
 }
 
+@media (max-width: 1180px) {
+    .explore-filter-bar,
+    .explore-filter-bar.has-target-language {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .explore-filter-bar label {
+        min-width: 0;
+    }
+
+    .explore-filter-bar button,
+    .explore-filter-bar.has-target-language button {
+        grid-column: 3;
+        grid-row: auto;
+    }
+}
+
+@media (max-width: 760px) {
+    .explore-filter-bar,
+    .explore-filter-bar.has-target-language {
+        grid-template-columns: 1fr;
+    }
+
+    .explore-filter-bar button,
+    .explore-filter-bar.has-target-language button {
+        grid-column: auto;
+    }
+}
+
 .explore-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -520,8 +549,101 @@ html.theme-dark .explore-follow-btn.is-unfollow:hover {
         grid-template-columns: 1fr;
     }
 
-    .explore-filter-bar button {
+    .explore-filter-bar button,
+    .explore-filter-bar.has-target-language button {
         grid-column: auto;
         grid-row: auto;
+    }
+}
+
+@media (max-width: 380px) {
+    .explore-main,
+    .explore-filter-bar,
+    .explore-section {
+        max-width: 100%;
+    }
+
+    .explore-filter-bar {
+        gap: 10px;
+        padding: 14px;
+        border-radius: 18px;
+        margin-bottom: 20px;
+    }
+
+    .explore-filter-bar label {
+        gap: 5px;
+        font-size: 0.64rem;
+        letter-spacing: 0.08em;
+    }
+
+    .explore-filter-bar input,
+    .explore-filter-bar select,
+    .explore-filter-bar button {
+        min-height: 48px;
+        border-radius: 12px;
+        font-size: 0.94rem;
+    }
+
+    .explore-grid {
+        gap: 14px;
+    }
+
+    .explore-card > .explore-follow-form {
+        padding-inline: 12px;
+        padding-bottom: 12px;
+    }
+
+    .explore-card > .explore-follow-form .explore-follow-btn,
+    .explore-deck-actions .deck-primary-btn,
+    .explore-follow-btn {
+        width: 100%;
+    }
+
+    .explore-deck-hero {
+        gap: 14px;
+        padding: 14px;
+        border-radius: 18px;
+    }
+
+    .explore-deck-hero .deck-card-icon {
+        height: 108px;
+        border-radius: 16px;
+    }
+
+    .explore-deck-copy h1 {
+        font-size: 1.35rem;
+        line-height: 1.15;
+    }
+
+    .explore-tabs {
+        gap: 14px;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .explore-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .explore-public-card,
+    .explore-review-form,
+    .explore-review {
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    .explore-review-head {
+        gap: 10px;
+        flex-direction: column;
+    }
+
+    .explore-review-actions {
+        align-self: flex-end;
+    }
+
+    .explore-review-edit-form {
+        right: auto;
+        left: 0;
+        width: min(300px, calc(100vw - 32px));
     }
 }

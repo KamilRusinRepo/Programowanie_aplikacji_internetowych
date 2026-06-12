@@ -426,3 +426,71 @@ html.theme-dark .admin-avatar {
 html.theme-dark .admin-modal-note {
     background: #101720;
 }
+
+@media (max-width: 640px) {
+    .admin-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-toolbar form,
+    .admin-toolbar input,
+    .admin-toolbar select,
+    .admin-add-btn {
+        width: 100%;
+    }
+
+    .admin-modal-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 380px) {
+    .admin-toolbar,
+    .admin-table-card {
+        border-radius: 16px;
+    }
+
+    .admin-toolbar {
+        padding: 14px;
+    }
+
+    .admin-table {
+        min-width: 680px;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 12px 14px;
+    }
+
+    .admin-modal {
+        padding: 10px;
+        align-items: start;
+        overflow-y: auto;
+    }
+
+    .admin-modal-card {
+        border-radius: 16px;
+    }
+
+    .admin-modal-header,
+    .admin-modal-footer {
+        padding: 16px;
+    }
+
+    .admin-modal-body {
+        padding: 18px 16px 22px;
+        gap: 14px;
+    }
+
+    .admin-modal-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .admin-modal-cancel,
+    .admin-modal-save {
+        width: 100%;
+    }
+}

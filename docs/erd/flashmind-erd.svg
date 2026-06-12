@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1240" viewBox="0 0 1800 1240">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { fill: #0f172a; font: 800 36px 'Segoe UI', Arial, sans-serif; }
+      .subtitle { fill: #64748b; font: 500 16px 'Segoe UI', Arial, sans-serif; }
+      .table { fill: #fff; stroke: #cbd5e1; stroke-width: 2; rx: 16; }
+      .head { fill: #22c55e; }
+      .headText { fill: #fff; font: 800 16px 'Segoe UI', Arial, sans-serif; letter-spacing: .04em; }
+      .field { fill: #0f172a; font: 13px 'Consolas', 'Segoe UI', monospace; }
+      .key { fill: #166534; font-weight: 800; }
+      .line { stroke: #64748b; stroke-width: 2.1; fill: none; marker-end: url(#arrow); }
+      .lineSoft { stroke: #94a3b8; stroke-width: 1.8; fill: none; marker-end: url(#arrowSoft); }
+      .label { fill: #334155; font: 800 12px 'Segoe UI', Arial, sans-serif; paint-order: stroke; stroke: #f8fafc; stroke-width: 4px; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowSoft" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1800" height="1240"/>
+  <text class="title" x="56" y="58">FlashMind ERD</text>
+  <text class="subtitle" x="56" y="86">Main relational schema: users, decks, cards, learning progress, marketplace reviews and login audit.</text>
+
+  <!-- USERS -->
+  <rect class="table" x="70" y="130" width="260" height="230"/>
+  <path class="head" d="M86 130h228a16 16 0 0 1 16 16v34H70v-34a16 16 0 0 1 16-16z"/>
+  <text class="headText" x="92" y="162">USERS</text>
+  <text class="field" x="92" y="204"><tspan class="key">PK</tspan> id</text>
+  <text class="field" x="92" y="227"><tspan class="key">UK</tspan> username</text>
+  <text class="field" x="92" y="250"><tspan class="key">UK</tspan> email</text>
+  <text class="field" x="92" y="273">password_hash</text>
+  <text class="field" x="92" y="296">is_enabled</text>
+  <text class="field" x="92" y="319">password_changed_at</text>
+  <text class="field" x="92" y="342">created_at</text>
+
+  <!-- ROLES -->
+  <rect class="table" x="70" y="440" width="260" height="122"/>
+  <path class="head" d="M86 440h228a16 16 0 0 1 16 16v34H70v-34a16 16 0 0 1 16-16z"/>
+  <text class="headText" x="92" y="472">ROLES</text>
+  <text class="field" x="92" y="514"><tspan class="key">PK</tspan> id</text>
+  <text class="field" x="92" y="537"><tspan class="key">UK</tspan> name</text>
+
+  <!-- DECKS -->
+  <rect class="table" x="70" y="650" width="292" height="270"/>
+  <path class="head" d="M86 650h260a16 16 0 0 1 16 16v34H70v-34a16 16 0 0 1 16-16z"/>
+  <text class="headText" x="92" y="682">DECKS</text>
+  <text class="field" x="92" y="724"><tspan class="key">PK</tspan> id</text>
+  <text class="field" x="92" y="747"><tspan class="key">FK</tspan> user_id</text>
+  <text class="field" x="92" y="770">name</text>
+  <text class="field" x="92" y="793">description</text>
+  <text class="field" x="92" y="816">deck_type</text>
+  <text class="field" x="92" y="839">source_language</text>
+  <text class="field" x="92" y="862">target_language</text>
+  <text class="field" x="92" y="885">category, background_url</text>
+  <text class="field" x="92" y="908">is_public, created_at</text>
+
+  <!-- USER_ROLES -->
+  <rect class="table" x="520" y="270" width="260" height="145"/>
+  <path class="head" d="M536 270h228a16 16 0 0 1 16 16v34H520v-34a16 16 0 0 1 16-16z"/>
+  <text class="headText" x="542" y="302">USER_ROLES</text>
+  <text class="field" x="542" y="344"><tspan class="key">PK</tspan> id</text>
+  <text class="field" x="542" y="367"><tspan class="key">FK</tspan> user_id</text>
+  <text class="field" x="542" y="390"><tspan class="key">FK</tspan> role_id</text>
+
+  <!-- CARDS -->
+  <rect class="table" x="520" y="650" width="292" height="230"/>
+  <path class="head" d="M536 650h260a16 16 0 0 1 16 16v34H520v-34a16 16 0 0 1 16-16z"/>
+  <text class="headText" x="542" y="682">CARDS</text>
+  <text class="field" x="542" y="724"><tspan class="key">PK</tspan> id</text>
+  <text class="field" x="542" y="747"><tspan class="key">FK</tspan> deck_id</text>
+  <text class="field" x="542" y="770">front_question</text>
+  <text class="field" x="542" y="793">example_sentence</text>
+  <text class="field" x="542" y="816">image_url</text>
+  <text class="field" x="542" y="839">answer</text>
+  <text class="field" x="542" y="862">translated_example</text>
+
+  <!-- USER_DAILY_PROGRESS -->
+  <rect class="table" x="520" y="960" width="292" height="175"/>
+  <path class="head" d="M536 960h260a16 16 0 0 1 16 16v34H520v-34a16 16 0 0 1 16-16z"/>
+  <text class="headText" x="542" y="992">USER_DAILY_PROGRESS</text>
+  <text class="field" x="542" y="1034"><tspan class="key">PK</tspan> id</text>
+  <text class="field" x="542" y="1057"><tspan class="key">FK</tspan> user_id</text>
+  <text class="field" x="542" y="1080">progress_date</text>
+  <text class="field" x="542" y="1103">answered_count, correct_count</text>
+  <text class="field" x="542" y="1126">xp_earned</text>
+
+  <!-- STUDY_SESSIONS -->
+  <rect class="table" x="960" y="130" width="292" height="250"/>
+  <path class="head" d="M976 130h260a16 16 0 0 1 16 16v34H960v-34a16 16 0 0 1 16-16z"/>
+  <text class="headText" x="982" y="162">STUDY_SESSIONS</text>
+  <text class="field" x="982" y="204"><tspan class="key">PK</tspan> id</text>
+  <text class="field" x="982" y="227"><tspan class="key">FK</tspan> user_id</text>
+  <text class="field" x="982" y="250"><tspan class="key">FK</tspan> deck_id</text>
+  <text class="field" x="982" y="273">total_cards</text>
+  <text class="field" x="982" y="296">correct_cards, wrong_cards</text>
+  <text class="field" x="982" y="319">xp_earned</text>
+  <text class="field" x="982" y="342">duration_seconds</text>
+  <text class="field" x="982" y="365">created_at</text>
+
+  <!-- CARD_PROGRESS -->
+  <rect class="table" x="960" y="560" width="292" height="250"/>
+  <path class="head" d="M976 560h260a16 16 0 0 1 16 16v34H960v-34a16 16 0 0 1 16-16z"/>
+  <text class="headText" x="982" y="592">CARD_PROGRESS</text>
+  <text class="field" x="982" y="634"><tspan class="key">PK</tspan> id</text>
+  <text class="field" x="982" y="657"><tspan class="key">FK</tspan> user_id</text>
+  <text class="field" x="982" y="680"><tspan class="key">FK</tspan> card_id</text>
+  <text class="field" x="982" y="703">attempts</text>
+  <text class="field" x="982" y="726">correct_count, wrong_count</text>
+  <text class="field" x="982" y="749">mastery_level</text>
+  <text class="field" x="982" y="772">wrong_streak</text>
+  <text class="field" x="982" y="795">last_answered_at, next_review_at</text>
+
+  <!-- LOGIN_ATTEMPTS -->
+  <rect class="table" x="960" y="920" width="292" height="190"/>
+  <path class="head" d="M976 920h260a16 16 0 0 1 16 16v34H960v-34a16 16 0 0 1 16-16z"/>
+  <text class="headText" x="982" y="952">LOGIN_ATTEMPTS</text>
+  <text class="field" x="982" y="994"><tspan class="key">PK</tspan> id</text>
+  <text class="field" x="982" y="1017">login_identifier</text>
+  <text class="field" x="982" y="1040">ip_address</text>
+  <text class="field" x="982" y="1063">user_agent</text>
+  <text class="field" x="982" y="1086">was_successful, failure_reason</text>
+
+  <!-- STUDY_SESSION_ANSWERS -->
+  <rect class="table" x="1400" y="130" width="320" height="190"/>
+  <path class="head" d="M1416 130h288a16 16 0 0 1 16 16v34h-320v-34a16 16 0 0 1 16-16z"/>
+  <text class="headText" x="1422" y="162">STUDY_SESSION_ANSWERS</text>
+  <text class="field" x="1422" y="204"><tspan class="key">PK</tspan> id</text>
+  <text class="field" x="1422" y="227"><tspan class="key">FK</tspan> session_id</text>
+  <text class="field" x="1422" y="250"><tspan class="key">FK</tspan> card_id</text>
+  <text class="field" x="1422" y="273">was_correct, user_answer</text>
+  <text class="field" x="1422" y="296">created_at</text>
+
+  <!-- DECK_FOLLOWS -->
+  <rect class="table" x="1400" y="470" width="292" height="145"/>
+  <path class="head" d="M1416 470h260a16 16 0 0 1 16 16v34h-292v-34a16 16 0 0 1 16-16z"/>
+  <text class="headText" x="1422" y="502">DECK_FOLLOWS</text>
+  <text class="field" x="1422" y="544"><tspan class="key">PK</tspan> id</text>
+  <text class="field" x="1422" y="567"><tspan class="key">FK</tspan> user_id</text>
+  <text class="field" x="1422" y="590"><tspan class="key">FK</tspan> deck_id</text>
+
+  <!-- DECK_REVIEWS -->
+  <rect class="table" x="1400" y="720" width="292" height="175"/>
+  <path class="head" d="M1416 720h260a16 16 0 0 1 16 16v34h-292v-34a16 16 0 0 1 16-16z"/>
+  <text class="headText" x="1422" y="752">DECK_REVIEWS</text>
+  <text class="field" x="1422" y="794"><tspan class="key">PK</tspan> id</text>
+  <text class="field" x="1422" y="817"><tspan class="key">FK</tspan> user_id</text>
+  <text class="field" x="1422" y="840"><tspan class="key">FK</tspan> deck_id</text>
+  <text class="field" x="1422" y="863">rating, comment</text>
+  <text class="field" x="1422" y="886">created_at, updated_at</text>
+
+  <!-- Relationships routed through empty corridors -->
+  <!-- users to user_roles -->
+  <path class="line" d="M330 245 H430 V342 H520"/>
+  <text class="label" x="418" y="236">1:N</text>
+  <!-- roles to user_roles -->
+  <path class="line" d="M330 500 H438 V390 H520"/>
+  <text class="label" x="428" y="490">1:N</text>
+  <!-- users to decks -->
+  <path class="line" d="M200 360 V650"/>
+  <text class="label" x="212" y="510">1:N</text>
+  <!-- decks to cards -->
+  <path class="line" d="M362 785 H520"/>
+  <text class="label" x="430" y="775">1:N</text>
+  <!-- users to daily progress -->
+  <path class="lineSoft" d="M330 320 H430 V1048 H520"/>
+  <text class="label" x="412" y="1018">1:N</text>
+  <!-- users to study sessions -->
+  <path class="lineSoft" d="M330 188 H890 V227 H960"/>
+  <text class="label" x="642" y="178">1:N</text>
+  <!-- decks to study sessions -->
+  <path class="lineSoft" d="M362 700 H890 V250 H960"/>
+  <text class="label" x="872" y="470">1:N</text>
+  <!-- study sessions to answers -->
+  <path class="line" d="M1252 225 H1400"/>
+  <text class="label" x="1312" y="214">1:N</text>
+  <!-- cards to answers -->
+  <path class="lineSoft" d="M812 764 H1328 V250 H1400"/>
+  <text class="label" x="1328" y="382">1:N</text>
+  <!-- users to card progress -->
+  <path class="lineSoft" d="M330 288 H890 V657 H960"/>
+  <text class="label" x="882" y="650">1:N</text>
+  <!-- cards to card progress -->
+  <path class="line" d="M812 690 H960"/>
+  <text class="label" x="870" y="680">1:N</text>
+  <!-- users to deck follows -->
+  <path class="lineSoft" d="M330 220 H1340 V565 H1400"/>
+  <text class="label" x="1338" y="555">N:M</text>
+  <!-- decks to deck follows -->
+  <path class="line" d="M362 740 H1320 V590 H1400"/>
+  <text class="label" x="1308" y="666">N:M</text>
+  <!-- users to deck reviews -->
+  <path class="lineSoft" d="M330 330 H1360 V817 H1400"/>
+  <text class="label" x="1362" y="806">1:N</text>
+  <!-- decks to deck reviews -->
+  <path class="line" d="M362 820 H1400"/>
+  <text class="label" x="870" y="810">1:N</text>
+
+  <text class="subtitle" x="56" y="1185">Source file: docs/erd/flashmind-erd.mmd</text>
+</svg>

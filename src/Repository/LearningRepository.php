@@ -316,35 +316,27 @@ final class LearningRepository
         ]);
 
         $current = $this->connection->prepare(
-            'SELECT mastery_level FROM card_progress WHERE user_id = :user_id AND card_id = :card_id LIMIT 1'
+            'SELECT mastery_level, wrong_streak FROM card_progress WHERE user_id = :user_id AND card_id = :card_id LIMIT 1'
         );
         $current->execute([
             'user_id' => $userId,
             'card_id' => $cardId,
         ]);
-        $currentLevel = $current->fetchColumn();
-        $mastery = $currentLevel === false ? 0 : (int) $currentLevel;
-        if ($wasCorrect) {
-            $mastery = $mastery <= 0 ? 2 : min(4, $mastery + 1);
-        } else {
-            $mastery = max(1, $mastery - 1);
-        }
-        $intervalDays = match ($mastery) {
-            1 => 1,
-            2 => 3,
-            3 => 7,
-            default => 14,
-        };
+        $currentProgress = $current->fetch();
+        $mastery = $currentProgress === false ? 0 : (int) $currentProgress['mastery_level'];
+        $wrongStreak = $currentProgress === false ? 0 : (int) ($currentProgress['wrong_streak'] ?? 0);
+        $nextProgress = $this->nextProgressState($wasCorrect, $mastery, $wrongStreak);
 
         $progress = $this->connection->prepare(
-            'INSERT INTO card_progress (user_id, card_id, attempts, correct_count, wrong_count, mastery_level, last_answered_at, next_review_at)
-             VALUES (:user_id, :card_id, 1, :correct_count, :wrong_count, :mastery_level, NOW(), NOW() + (:interval_days * INTERVAL \'1 day\'))
+            'INSERT INTO card_progress (user_id, card_id, attempts, correct_count, wrong_count, mastery_level, wrong_streak, last_answered_at, next_review_at)
+             VALUES (:user_id, :card_id, 1, :correct_count, :wrong_count, :mastery_level, :wrong_streak, NOW(), NOW() + (:interval_days * INTERVAL \'1 day\'))
              ON CONFLICT (user_id, card_id)
              DO UPDATE SET
                 attempts = card_progress.attempts + 1,
                 correct_count = card_progress.correct_count + EXCLUDED.correct_count,
                 wrong_count = card_progress.wrong_count + EXCLUDED.wrong_count,
                 mastery_level = EXCLUDED.mastery_level,
+                wrong_streak = EXCLUDED.wrong_streak,
                 last_answered_at = NOW(),
                 next_review_at = EXCLUDED.next_review_at'
         );
@@ -353,9 +345,58 @@ final class LearningRepository
             'card_id' => $cardId,
             'correct_count' => $wasCorrect ? 1 : 0,
             'wrong_count' => $wasCorrect ? 0 : 1,
-            'mastery_level' => $mastery,
-            'interval_days' => $intervalDays,
+            'mastery_level' => $nextProgress['mastery_level'],
+            'wrong_streak' => $nextProgress['wrong_streak'],
+            'interval_days' => $nextProgress['interval_days'],
         ]);
+    }
+
+    private function nextProgressState(bool $wasCorrect, int $currentMastery, int $currentWrongStreak): array
+    {
+        $mastery = max(0, min(4, $currentMastery));
+        $wrongStreak = max(0, $currentWrongStreak);
+
+        if ($wasCorrect) {
+            $mastery = $mastery <= 0 ? 2 : min(4, $mastery + 1);
+
+            return [
+                'mastery_level' => $mastery,
+                'wrong_streak' => 0,
+                'interval_days' => $this->intervalDaysForMastery($mastery),
+            ];
+        }
+
+        if ($mastery <= 0) {
+            return [
+                'mastery_level' => 1,
+                'wrong_streak' => 1,
+                'interval_days' => 1,
+            ];
+        }
+
+        if ($wrongStreak >= 1) {
+            return [
+                'mastery_level' => max(1, $mastery - 1),
+                'wrong_streak' => 0,
+                'interval_days' => 1,
+            ];
+        }
+
+        return [
+            'mastery_level' => $mastery,
+            'wrong_streak' => 1,
+            'interval_days' => 1,
+        ];
+    }
+
+    private function intervalDaysForMastery(int $mastery): int
+    {
+        return match ($mastery) {
+            1 => 1,
+            2 => 3,
+            3 => 7,
+            default => 14,
+        };
     }
 
     private function streakDays(int $userId, int $dailyGoal): int
@@ -651,6 +692,7 @@ final class LearningRepository
                 correct_count INT NOT NULL DEFAULT 0,
                 wrong_count INT NOT NULL DEFAULT 0,
                 mastery_level INT NOT NULL DEFAULT 0,
+                wrong_streak INT NOT NULL DEFAULT 0,
                 last_answered_at TIMESTAMPTZ,
                 next_review_at TIMESTAMPTZ,
                 CONSTRAINT card_progress_user_card_unique UNIQUE (user_id, card_id)
@@ -668,5 +710,6 @@ final class LearningRepository
         );
         $this->connection->exec('ALTER TABLE study_sessions ADD COLUMN IF NOT EXISTS duration_seconds INT NOT NULL DEFAULT 0');
         $this->connection->exec('ALTER TABLE decks ADD COLUMN IF NOT EXISTS background_url TEXT');
+        $this->connection->exec('ALTER TABLE card_progress ADD COLUMN IF NOT EXISTS wrong_streak INT NOT NULL DEFAULT 0');
     }
 }

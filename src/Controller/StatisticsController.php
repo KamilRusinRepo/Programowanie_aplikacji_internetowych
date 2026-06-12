@@ -63,7 +63,7 @@ final class StatisticsController extends BaseController
             'heatmapMonths' => $heatmap['months'] ?? [],
             'heatmapDays' => $heatmap['days'] ?? [],
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=18"><link rel="stylesheet" href="/styles/statistics.css?v=11">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26"><link rel="stylesheet" href="/styles/statistics.css?v=12">',
                 'extraJs' => '<script defer src="/scripts/statistics-overview.js?v=2"></script>',
             ],
         ], 'layout/dashboard');
@@ -91,7 +91,7 @@ final class StatisticsController extends BaseController
                 'emptyClass' => $decks === [] ? '' : 'is-hidden',
             ],
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=18"><link rel="stylesheet" href="/styles/statistics.css?v=11">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26"><link rel="stylesheet" href="/styles/statistics.css?v=12">',
             ],
             'decks' => $this->prepareDeckCards($decks),
         ], 'layout/dashboard');
@@ -139,7 +139,7 @@ final class StatisticsController extends BaseController
             'buckets' => $this->prepareBuckets($buckets),
             'cards' => $this->prepareCardRows($cards),
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=18"><link rel="stylesheet" href="/styles/statistics.css?v=11">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26"><link rel="stylesheet" href="/styles/statistics.css?v=12">',
             ],
         ], 'layout/dashboard');
     }

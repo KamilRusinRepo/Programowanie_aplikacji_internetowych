@@ -46,7 +46,7 @@ final class DeckController extends BaseController
             'form' => $this->deckFormMeta('create'),
             'old' => $this->prepareDeckFormValues([]),
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26">',
                 'extraJs' => '<script defer src="/scripts/deck-create.js?v=2"></script>',
             ],
         ], 'layout/dashboard');
@@ -84,7 +84,7 @@ final class DeckController extends BaseController
                 'form' => $this->deckFormMeta('edit', $deckId),
                 'old' => $this->prepareDeckFormValues($deck),
                 'raw' => [
-                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
+                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26">',
                     'extraJs' => '<script defer src="/scripts/deck-create.js?v=2"></script>',
                 ],
             ], 'layout/dashboard');
@@ -116,7 +116,7 @@ final class DeckController extends BaseController
             'form' => $this->deckFormMeta('edit', $deckId),
             'old' => $this->prepareDeckFormValues($deck),
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26">',
                 'extraJs' => '<script defer src="/scripts/deck-create.js?v=2"></script>',
             ],
         ], 'layout/dashboard');
@@ -163,7 +163,7 @@ final class DeckController extends BaseController
                 'emptyClass' => $deckCards === [] ? '' : 'is-hidden',
             ],
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26">',
                 'extraJs' => '<script defer src="/scripts/deck-show.js?v=2"></script>',
             ],
             'decks' => $deckCards,
@@ -210,7 +210,7 @@ final class DeckController extends BaseController
                 'publicReviews' => [],
                 'reviews' => [],
                 'raw' => [
-                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
+                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26">',
                     'extraJs' => '<script defer src="/scripts/deck-show.js?v=2"></script>',
                 ],
                 'cards' => $cardRows,
@@ -274,7 +274,7 @@ final class DeckController extends BaseController
             ]] : [],
             'reviews' => $this->prepareDeckReviews($reviews),
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26">',
                 'extraJs' => '<script defer src="/scripts/deck-show.js?v=2"></script>',
             ],
             'cards' => $cardRows,
@@ -342,7 +342,7 @@ final class DeckController extends BaseController
                 'cardsJson' => $cardsJson,
             ],
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/study.css?v=5">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/study.css?v=7">',
                 'extraJs' => '<script defer src="/scripts/study-session.js?v=3"></script>',
             ],
         ], 'layout/dashboard');
@@ -467,7 +467,7 @@ final class DeckController extends BaseController
                 'levelText' => $levelText,
             ],
             'raw' => [
-                'extraCss' => '<link rel="stylesheet" href="/styles/study.css?v=5">',
+                'extraCss' => '<link rel="stylesheet" href="/styles/study.css?v=7">',
             ],
         ], 'layout/dashboard');
     }
@@ -597,7 +597,7 @@ final class DeckController extends BaseController
                 'form' => $this->deckFormMeta('create'),
                 'old' => $this->prepareDeckFormValues($data),
                 'raw' => [
-                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
+                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26">',
                     'extraJs' => '<script defer src="/scripts/deck-create.js?v=2"></script>',
                 ],
             ], 'layout/dashboard');
@@ -655,7 +655,7 @@ final class DeckController extends BaseController
                     'form' => $this->deckFormMeta('edit', $deckId),
                     'old' => $this->prepareDeckFormValues($data),
                     'raw' => [
-                        'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
+                        'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26">',
                         'extraJs' => '<script defer src="/scripts/deck-create.js?v=2"></script>',
                     ],
                 ], 'layout/dashboard');
@@ -689,7 +689,7 @@ final class DeckController extends BaseController
                 'form' => $this->deckFormMeta('edit', $deckId),
                 'old' => $this->prepareDeckFormValues($data),
                 'raw' => [
-                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=21">',
+                    'extraCss' => '<link rel="stylesheet" href="/styles/decks.css?v=26">',
                     'extraJs' => '<script defer src="/scripts/deck-create.js?v=2"></script>',
                 ],
             ], 'layout/dashboard');
